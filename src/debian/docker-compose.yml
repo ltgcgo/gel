@@ -1,0 +1,8 @@
+version: "2023.5.1"
+services:
+  gel:
+    volumes:
+      - ./shared:/root/shared
+      - ./sh:/root/distro/sh
+      - ./etc:/root/distro/etc
+    build: .

@@ -1,0 +1,15 @@
+Welcome to PonyTrails, a Linux container image!
+Website: https://www.ltgc.cc/project/gel
+
+Shell in screens: screen -S name
+Proxied shells:   pc -q $0
+
+Join the discussion: https://www.ltgc.cc/contact
+
+The programs included with the system are free software;
+the exact distribution terms for each program are
+described in the individual files in
+/usr/share/doc/*/copyright.
+
+Gel comes with ABSOLUTELY NO WARRANTY, to
+the extent permitted by applicable law.
