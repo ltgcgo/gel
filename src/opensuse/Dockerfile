@@ -14,5 +14,5 @@ RUN bash /root/sh/distro/setup.sh
 
 # Run forever
 EXPOSE 1122
-#CMD ["/sbin/init"]
-CMD ["sleep", "infinity"]
+CMD ["/sbin/init"]
+#CMD ["sleep", "infinity"]
