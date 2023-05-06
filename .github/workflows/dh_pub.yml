@@ -10,8 +10,9 @@ on:
     - cron: '30 8 * * 5'
   push:
     branches: [ "main" ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    paths: 
+      - "build_version"
+      - ".github/workflows/**_pub.yml"
 
 env:
   # Use docker.io for Docker Hub if empty
