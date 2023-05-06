@@ -16,6 +16,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: docker.io
+  DH_ACCT: ${{ scrects.DH_USER }}
   DH_USER: ltgc
   DH_PASS: ${{ secrets.DH_PASS }}
 
@@ -30,7 +31,7 @@ jobs:
       - name: Log in to ${{ env.REGISTRY }}
         uses: redhat-actions/podman-login@v1
         with:
-          username: ${{ env.DH_USER }}
+          username: ${{ env.DH_ACCT }}
           password: ${{ env.DH_PASS }}
           registry: ${{ env.REGISTRY }}
       - name: Generate distributable directory structure
