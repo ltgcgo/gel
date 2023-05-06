@@ -37,6 +37,8 @@ jobs:
           registry: ${{ env.REGISTRY }}
       - name: Generate distributable directory structure
         run: PATH=./:$PATH bash ./shx build
+      - name: Build and push the Alpine flavour
+        run: PATH=./:$PATH bash ./shx submit alpine
       - name: Build and push the Debian flavour
         run: PATH=./:$PATH bash ./shx submit debian
       - name: Build and push the Fedora flavour
