@@ -1,20 +1,20 @@
-ARG FEDORA_CHANNEL=38
+ARG FEDORA_CHANNEL=latest
 
-FROM docker.io/debian:${DEBIAN_CHANNEL}
+FROM docker.io/fedora:${FEDORA_CHANNEL}
 
 # Set working environment up
 WORKDIR /root
 
-# Copy and run shared files
+# Copy and run
 COPY ./shared/etc/ /etc/
 COPY ./shared/sh/ /root/sh/shared
-RUN bash /root/sh/shared/setup.sh
-
-# Copy and run distro-specific files
 COPY ./etc/ /etc/
 COPY ./sh/ /root/sh/distro
+RUN bash /root/sh/distro/init.sh
+RUN bash /root/sh/shared/setup.sh
 RUN bash /root/sh/distro/setup.sh
 
 # Run forever
 EXPOSE 1122
 CMD ["/sbin/init"]
+#CMD ["sleep", "infinity"]

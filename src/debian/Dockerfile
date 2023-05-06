@@ -5,14 +5,12 @@ FROM docker.io/debian:${DEBIAN_CHANNEL}
 # Set working environment up
 WORKDIR /root
 
-# Copy and run shared files
+# Copy and run
 COPY ./shared/etc/ /etc/
 COPY ./shared/sh/ /root/sh/shared
-RUN bash /root/sh/shared/setup.sh
-
-# Copy and run distro-specific files
 COPY ./etc/ /etc/
 COPY ./sh/ /root/sh/distro
+RUN bash /root/sh/shared/setup.sh
 RUN bash /root/sh/distro/setup.sh
 
 # Run forever

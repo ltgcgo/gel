@@ -1,8 +1,14 @@
 #!/bin/bash
 echo "Pre-install..."
+rm -f /etc/dnf/protected.d/sudo.conf
+dnf remove -y sudo
 echo "Installation stage 1..."
+dnf install -y ca-certificates \
 echo "Installation stage 2..."
-echo "Installation stage 3..."
+dnf install -y systemd opendoas gpg bash zsh openssh-server \
+	unzip zip bzip2 lzip lziprecover brotli \
+	bind9-next-utils net-tools iputils traceroute tcptraceroute psmisc \
+	nano tree netcat pv curl git screen htop neofetch
 echo "Post-install..."
 mkdir -p /run/sshd
 exit
