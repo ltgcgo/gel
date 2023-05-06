@@ -12,6 +12,7 @@ COPY ./etc/ /etc/
 COPY ./sh/ /root/sh/distro
 RUN bash /root/sh/shared/setup.sh
 RUN bash /root/sh/distro/setup.sh
+RUN bash /root/sh/shared/post.sh
 
 # Run forever
 EXPOSE 1122
