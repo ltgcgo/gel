@@ -41,3 +41,5 @@ jobs:
         run: PATH=./:$PATH bash ./shx submit debian
       - name: Build and push the Fedora flavour
         run: PATH=./:$PATH bash ./shx submit fedora
+      - name: Build and push the openSUSE flavour
+        run: PATH=./:$PATH bash ./shx submit opensuse
