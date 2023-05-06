@@ -1,4 +1,4 @@
-ARG DEBIAN_CHANNEL=testing
+ARG FEDORA_CHANNEL=38
 
 FROM docker.io/debian:${DEBIAN_CHANNEL}
 

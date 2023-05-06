@@ -1,6 +1,4 @@
-ARG DEBIAN_CHANNEL=testing
-
-FROM docker.io/debian:${DEBIAN_CHANNEL}
+FROM docker.io/debian/tumbleweed
 
 # Set working environment up
 WORKDIR /root

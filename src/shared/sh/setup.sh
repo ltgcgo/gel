@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /root/sh/
+cd /root/sh/shared
 bash syncSkel.sh
 exit
