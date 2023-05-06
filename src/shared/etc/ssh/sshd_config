@@ -6,6 +6,7 @@ PubkeyAuthentication yes
 
 PasswordAuthentication yes
 PermitEmptyPasswords yes
+PermitRootLogin yes
 
 ChallengeResponseAuthentication no
 

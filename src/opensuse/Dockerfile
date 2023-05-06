@@ -15,4 +15,4 @@ RUN bash /root/sh/distro/setup.sh
 
 # Run forever
 EXPOSE 1122
-ENTRYPOINT ["/usr/sbin/sshd"]
+CMD ["/sbin/init"]
