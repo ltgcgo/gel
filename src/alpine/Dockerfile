@@ -1,6 +1,6 @@
 ARG ALPINE_CHANNEL=latest
 
-FROM docker.io/alpine:${FEDORA_CHANNEL}
+FROM docker.io/alpine:${ALPINE_CHANNEL}
 
 # Set working environment up
 WORKDIR /root
