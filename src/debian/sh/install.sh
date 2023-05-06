@@ -17,7 +17,7 @@ apt -o Dpkg::Options::=--force-confnew upgrade -y
 echo "Installation stage 3..."
 apt -o Dpkg::Options::=--force-confnew install -y init doas gnupg gpgv bash zsh ssh \
 	unzip zip bzip2 lzip lziprecover brotli \
-	dnsutils net-tools traceroute tcptraceroute psmisc \
+	dnsutils net-tools traceroute tcptraceroute psmisc nftables \
 	nano tree netcat-openbsd pv curl git screen htop neofetch
 echo "Post-install..."
 mkdir -p /run/sshd

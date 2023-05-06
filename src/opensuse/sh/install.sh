@@ -8,7 +8,7 @@ zypper --gpg-auto-import-keys update -y
 echo "Installation stage 3..."
 zypper --gpg-auto-import-keys in -y systemd opendoas gpg2 bash zsh openssh-server \
 	unzip zip bzip2 lzip lziprecover brotli \
-	bind-utils net-tools iputils traceroute psmisc \
+	bind-utils net-tools iputils traceroute psmisc nftables \
 	nano tree netcat-openbsd pv curl git screen htop neofetch
 echo "Post-install..."
 mkdir -p /run/sshd
