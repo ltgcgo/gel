@@ -10,7 +10,7 @@ PermitRootLogin yes
 
 ChallengeResponseAuthentication no
 
-UsePAM no
+#UsePAM no
 
 X11Forwarding yes
 PrintMotd yes

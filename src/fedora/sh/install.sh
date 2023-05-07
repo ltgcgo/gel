@@ -6,9 +6,9 @@ echo "Installation stage 1..."
 dnf install -y ca-certificates \
 echo "Installation stage 2..."
 dnf install -y systemd opendoas gpg bash zsh openssh-server \
-	unzip zip bzip2 lzip lziprecover brotli \
+	unzip zip bzip2 lzip lziprecover brotli zopfli pigz lbzip2 \
 	bind9-next-utils net-tools iputils traceroute tcptraceroute psmisc nftables \
-	nano tree netcat pv curl git screen htop neofetch
+	nano tree netcat socat pv curl git screen htop neofetch
 echo "Post-install..."
 mkdir -p /run/sshd
 exit
