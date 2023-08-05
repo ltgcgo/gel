@@ -1,5 +1,4 @@
 #!/usr/bin/bash
-cprefix="../../configs"
 if [ "$(whoami)" == "root" ] ; then
 	cp -nv $PREFIX/etc/skel/.* ~/
 	chsh -s /bin/zsh && echo "Default shell switched to ZSH."
@@ -14,7 +13,7 @@ if [ "$(whoami)" == "root" ] ; then
 				if [ -e "$PREFIX/home/$curUser/.zshrc" ] ; then
 					echo "skipped."
 				else
-					cp -nr $cprefix/etc/skel/.* "$PREFIX/home/$curUser/"
+					cp -nv $PREFIX/etc/skel/.* "$PREFIX/home/$curUser/"
 					echo "success."
 					echo "Forcing ZSH usage for user [$curUser] ..."
 					chsh $curUser -s /bin/zsh

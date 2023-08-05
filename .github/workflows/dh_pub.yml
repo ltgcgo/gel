@@ -36,7 +36,7 @@ jobs:
           password: ${{ env.DH_PASS }}
           registry: ${{ env.REGISTRY }}
       - name: Generate distributable directory structure
-        run: PATH=./:$PATH bash ./shx build
+        run: PATH=./:$PATH bash ./shx buildTree
       - name: Build and push the Alpine flavour
         run: PATH=./:$PATH bash ./shx submit alpine
       - name: Build and push the Debian flavour

@@ -1,5 +1,5 @@
 #!/bin/bash
-shx build
+shx buildTree
 if [ -d "./dist/${1}/" ] ; then
 	cd ./dist/${1}
 	podman stop ${1}_gel_1
