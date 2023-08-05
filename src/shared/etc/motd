@@ -1,11 +1,5 @@
-Welcome to Gel, a customized Linux container image!
-This container image is built on top of __FLAVOUR__.
-
-Website: https://www.ltgc.cc/project/gel
-Join the discussion: https://www.ltgc.cc/contact
-
-Shell in screens: screen -S name
-Proxied shells:   pc -q $0
+Welcome to Gel, a customized Linux server image!
+This server image is built on top of __FLAVOUR__.
 
 The programs included with the system are free software;
 the exact distribution terms for each program are
@@ -14,3 +8,9 @@ described in the individual files in
 
 Gel comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
+
+Root shell:   doas su
+
+Website: https://ltgc.cc/project/gel
+Docs:    https://kb.ltgc.cc/gel/
+Discuss: https://ltgc.cc/about.htm
