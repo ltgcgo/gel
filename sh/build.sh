@@ -18,7 +18,7 @@ elif [ -d "./src/${1}/" ] ; then
 	zip -r9q "../${1}.zip" ./*
 	echo "Installer bundle emit finished."
 	cd ../..
-	#rm -r "./build/${1}" 2> /dev/null
+	rm -r "./build/${1}" 2> /dev/null
 else
 	echo "Image \"${1}\" not found."
 fi
