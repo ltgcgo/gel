@@ -1,16 +1,7 @@
 Welcome to Gel, a customized Linux server image!
 This server image is built on top of __FLAVOUR__.
 
-The programs included with the system are free software;
-the exact distribution terms for each program are
-described in the individual files in
-/usr/share/doc/*/copyright.
-
-Gel comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-
-Root shell:   doas su
+Root:    doas su
 
 Website: https://ltgc.cc/project/gel
 Docs:    https://kb.ltgc.cc/gel/
-Discuss: https://ltgc.cc/about.htm

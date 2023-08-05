@@ -1,5 +1,5 @@
 # gel
-⛏ Rolling Podman container images, batteries included.
+⛏ Rolling server container images, batteries included.
 
 ## Usage
 1. Spin up one of the available Gel flavours (`debian`, `alpine`, `opensuse`, `rocky` and `fedora`).
