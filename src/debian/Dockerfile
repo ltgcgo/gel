@@ -1,4 +1,4 @@
-ARG DEBIAN_CHANNEL=testing
+ARG DEBIAN_CHANNEL=stable
 
 FROM docker.io/debian:${DEBIAN_CHANNEL}
 
