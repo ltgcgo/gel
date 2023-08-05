@@ -8,7 +8,7 @@ echo "Installation stage 2..."
 dnf install -y systemd gpg bash zsh openssh-server \
 	unzip zip bzip2 lzip brotli zopfli pigz lbzip2 \
 	net-tools iputils traceroute tcptraceroute psmisc nftables \
-	nano tree netcat socat pv git screen htop neofetch sqlite
+	nano tree netcat socat pv git screen htop sqlite
 echo "Installation stage 3..."
 dnf install -y libstdc++
 #bash raw.sh bind9-next-license-9.19.11.rpm
