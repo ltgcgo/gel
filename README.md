@@ -10,7 +10,7 @@
 
 ### Native
 1. On any of the supported distros, make sure `curl` is available.
-2. Execute `sh <(https://github.com/ltgcgo/gel/releases/latest/download/install.sh)`.
+2. Execute `sh <(curl -Ls https://github.com/ltgcgo/gel/releases/latest/download/install.sh)`.
 3. Connect to the SSH with `ssh -p 1122 <serverIP>`. The default password is `root`.
 
 ## Docs
