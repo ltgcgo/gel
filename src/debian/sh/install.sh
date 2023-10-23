@@ -16,7 +16,7 @@ sed -i "s/http/https/g" $PREFIX/etc/apt/sources.list
 apt -o Dpkg::Options::=--force-confnew upgrade -y
 echo "Installation stage 3..."
 apt -o Dpkg::Options::=--force-confnew install -y init doas gnupg gpgv bash zsh ssh \
-	unzip zip tar bzip2 lzip lziprecover brotli zopfli pigz lbzip2 plzip \
+	unzip zip tar bzip2 lzip lziprecover brotli zopfli pigz lbzip2 plzip xz-utils \
 	webp libjxl-tools vorbis-tools opus-tools \
 	dnsutils net-tools traceroute tcptraceroute psmisc nftables \
 	nano tree netcat-openbsd socat pv curl git screen htop
