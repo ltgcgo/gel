@@ -10,7 +10,7 @@ zypper --gpg-auto-import-keys in -y systemd opendoas gpg2 bash zsh openssh-serve
 	unzip zip tar bzip2 lzip lziprecover brotli zopfli pigz lbzip2 plzip xz \
 	#libwebp-tools libjxl-tools vorbis-tools opus-tools \
 	bind-utils net-tools iputils traceroute psmisc nftables \
-	nano tree netcat-openbsd socat pv curl git screen htop neofetch
+	nano tree netcat-openbsd socat pv curl git screen htop
 echo "Post-install..."
 mkdir -p /run/sshd
 exit
