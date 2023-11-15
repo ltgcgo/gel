@@ -1,4 +1,4 @@
-ARG DEBIAN_CHANNEL=stable
+ARG DEBIAN_CHANNEL=stable-slim
 
 FROM docker.io/debian:${DEBIAN_CHANNEL}
 
