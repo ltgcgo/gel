@@ -39,6 +39,8 @@ jobs:
         run: PATH=./:$PATH bash ./shx buildTree
       - name: Build and push the Alpine flavour
         run: PATH=./:$PATH bash ./shx submit alpine
+      - name: Build and push the Debian Slim flavour
+        run: PATH=./:$PATH bash ./shx submit debslim
       - name: Build and push the Debian flavour
         run: PATH=./:$PATH bash ./shx submit debian
       - name: Build and push the openSUSE flavour
