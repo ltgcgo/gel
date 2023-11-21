@@ -7,7 +7,7 @@ For bare-metal, virtual machines and LXC containers.
 
 1. On any of the supported distros, make sure `curl` is available.
 2. Execute `sh <(curl -Ls https://github.com/ltgcgo/gel/releases/latest/download/install.sh)`.
-<!--3. Connect to the SSH with `ssh -p 1122 <serverIP>`. The default password is `gelatinousroot`.-->
+3. Connect to the SSH with `ssh -p 1122 <serverIP>`. User passwords won't change, but SSH settings will.
 
 ### Containers
 Container images are only offered as a convenient way of inspecting the installations.
