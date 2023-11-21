@@ -12,4 +12,5 @@ zypper --gpg-auto-import-keys in -y systemd opendoas bash zsh openssh-server \
 	nano tree netcat-openbsd pv curl
 echo "Post-install..."
 mkdir -p /run/sshd
+systemctl enable sshd
 exit
