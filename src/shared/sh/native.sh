@@ -1,4 +1,5 @@
 #!/bin/bash
+export MODE_NATIVE=1
 cd ~/gel/
 echo "Setting up Gel in a native environment."
 echo "Copying shared config files..."
