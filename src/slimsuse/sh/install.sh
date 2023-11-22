@@ -7,7 +7,7 @@ echo "Installation stage 2..."
 zypper --gpg-auto-import-keys update -y
 echo "Installation stage 3..."
 zypper --gpg-auto-import-keys in -y systemd opendoas bash zsh openssh-server \
-	unzip zip tar bzip2 lzip brotli xz \
+	unzip zip tar bzip2 brotli xz \
 	bind-utils net-tools psmisc nftables \
 	nano tree netcat-openbsd pv curl
 echo "Post-install..."
