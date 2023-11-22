@@ -40,9 +40,11 @@ jobs:
       - name: Build and push the Alpine flavour
         run: PATH=./:$PATH bash ./shx submit alpine
       - name: Build and push the Debian Slim flavour
-        run: PATH=./:$PATH bash ./shx submit debslim
+        run: PATH=./:$PATH bash ./shx submit slimdeb
       - name: Build and push the Debian flavour
         run: PATH=./:$PATH bash ./shx submit debian
+      - name: Build and push the openSUSE Slim flavour
+        run: PATH=./:$PATH bash ./shx submit slimsuse
       - name: Build and push the openSUSE flavour
         run: PATH=./:$PATH bash ./shx submit opensuse
       - name: Build and push the Rocky flavour
