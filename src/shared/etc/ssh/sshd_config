@@ -7,7 +7,7 @@ PubkeyAuthentication yes
 PasswordAuthentication yes
 PermitEmptyPasswords no
 PermitRootLogin yes
-#AllowGroups ssh
+#AllowGroups sshuser
 #DenyGroups root
 
 ChallengeResponseAuthentication no
