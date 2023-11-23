@@ -1,5 +1,6 @@
 #!/bin/bash
 # Configure default root password
+groupadd -f ssh
 if [ "$MODE_NATIVE" != "1" ]; then
 	echo "root:root" | chpasswd
 fi
