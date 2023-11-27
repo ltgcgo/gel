@@ -24,6 +24,7 @@ names=( "web" "mix" "pod" )
 # mix: Mixnet access, port forwarders for mixnet exposure, etc
 # pod: Actual host for running Docker/Podman containers
 startOrder=1
+lxcTree="${PREFIX}/var/lib/lxc"
 # In this file, slim Debian containers are being created.
 if [ ! -f "gel.zip" ]; then
 	curl -Lo "gel.zip" "https://github.com/ltgcgo/gel/releases/latest/download/slimdeb.zip"
@@ -31,7 +32,7 @@ fi
 curl -Lo "gelInst.sh" "https://github.com/ltgcgo/gel/releases/latest/download/install.sh"
 for name in ${names[@]}; do
 	# Set the config file name to write to
-	lxcPath="${PREFIX}/var/lib/lxc/${name}"
+	lxcPath="${lxcTree}/${name}"
 	lxcConf="${lxcPath}/config"
 	lxcRoot="${lxcPath}/rootfs"
 	# Create seperate LXC containers for different purposes
@@ -53,5 +54,11 @@ for name in ${names[@]}; do
 	startOrder=$(($startOrder+1))
 done
 # Enable TUN device in "mix"
-echo -e "lxc.mount.entry = /dev/net dev/net none bind,create=dir\nlxc.cgroup2.devices.allow = c 10:200 rwm" >> "${lxcConf}"
+echo -e "lxc.mount.entry = /dev/net dev/net none bind,create=dir\nlxc.cgroup2.devices.allow = c 10:200 rwm" >> "${lxcTree}/mix/config"
+# Limit RAM usage in "mix"
+echo -e "lxc.cgroup2.memory.max = 256M" >> "${lxcTree}/mix/config"
+# Limit CPU usage in "mix"
+echo -e "lxc.cgroup2.cpu.max = 200000 1000000" >> "${lxcTree}/mix/config"
+# Limit CPU usage in "pod"
+echo -e "lxc.cgroup2.cpu.max = 400000 1000000" >> "${lxcTree}/pod/config"
 exit
