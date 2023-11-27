@@ -24,15 +24,16 @@ names=( "web" "mix" "pod" )
 # mix: Mixnet access, port forwarders for mixnet exposure, etc
 # pod: Actual host for running Docker/Podman containers
 startOrder=1
+# In this file, slim Debian containers are being created.
+if [ ! -f "gel.zip" ]; then
+	curl -Lo "gel.zip" "https://github.com/ltgcgo/gel/releases/latest/download/slimdeb.zip"
+fi
+curl -Lo "gelInst.sh" "https://github.com/ltgcgo/gel/releases/latest/download/install.sh"
 for name in ${names[@]}; do
 	# Set the config file name to write to
 	lxcPath="${PREFIX}/var/lib/lxc/${name}"
 	lxcConf="${lxcPath}/config"
 	lxcRoot="${lxcPath}/rootfs"
-	# In this file, slim Debian containers are being created.
-	if [ ! -f "gel.zip" ]; then
-		curl -Lo "gel.zip" "https://github.com/ltgcgo/gel/releases/latest/download/slimdeb.zip"
-	fi
 	# Create seperate LXC containers for different purposes
 	lxc-create -t download -n "${name}" -- --dist debian --release bookworm --arch $targetArch
 	# Set autostart
@@ -43,10 +44,11 @@ for name in ${names[@]}; do
 	echo -e "lxc.net.0.ipv4.address = ${lxcSubNet}.$((startOrder + 4))/24\nlxc.net.0.ipv4.gateway = auto" >> "${lxcConf}"
 	# Copy the Gel setup file into the container
 	cp -v gel.zip "${lxcRoot}/root/gel.zip"
+	cp -v gelInst.sh "${lxcRoot}/root/install.sh"
 	# Start the container
 	lxc-start -n "${name}"
 	# Configure Gel
-	lxc-attach -n web -u 0 -g 0 -- "bash <(curl -Ls https://github.com/ltgcgo/gel/releases/latest/download/install.sh)"
+	lxc-attach -n "${name}" -u 0 -g 0 -- sh "/root/install.sh"
 	# Increase the start order
 	startOrder=$(($startOrder+1))
 done
