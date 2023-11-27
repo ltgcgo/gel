@@ -43,10 +43,10 @@ for name in ${names[@]}; do
 	echo -e "lxc.net.0.ipv4.address = ${lxcSubNet}.$((startOrder + 4))/24\nlxc.net.0.ipv4.gateway = auto" >> "${lxcConf}"
 	# Copy the Gel setup file into the container
 	cp -v gel.zip "${lxcRoot}/root/gel.zip"
-	# Configure Gel
-	lxc-attach -n web -u 0 -g 0 -- "bash <(curl -Ls https://github.com/ltgcgo/gel/releases/latest/download/install.sh)"
 	# Start the container
 	lxc-start -n "${name}"
+	# Configure Gel
+	lxc-attach -n web -u 0 -g 0 -- "bash <(curl -Ls https://github.com/ltgcgo/gel/releases/latest/download/install.sh)"
 	# Increase the start order
 	startOrder=$(($startOrder+1))
 done
