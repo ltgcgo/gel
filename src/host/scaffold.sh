@@ -3,6 +3,7 @@
 # These scripts will create a series of privileged containers for convenience,
 # but will eventually move to root-based unprivileged containers.
 #
+cd ~root
 # Automatically adapt to host architecture
 hostArch=$(uname -m)
 targetArch="unsupported"
@@ -25,7 +26,13 @@ names=( "web" "mix" "pod" )
 startOrder=1
 for name in ${names[@]}; do
 	# Set the config file name to write to
-	lxcConf="${PREFIX}/var/lib/lxc/${name}/config"
+	lxcPath="${PREFIX}/var/lib/lxc/${name}"
+	lxcConf="${lxcPath}/config"
+	lxcRoot="${lxcPath}/rootfs"
+	# In this file, slim Debian containers are being created.
+	if [ ! -f "gel.zip" ]; then
+		curl -Lo "gel.zip" "https://github.com/ltgcgo/gel/releases/latest/download/slimdeb.zip"
+	fi
 	# Create seperate LXC containers for different purposes
 	lxc-create -t download -n "${name}" -- --dist debian --release bookworm --arch $targetArch
 	# Set autostart
@@ -34,6 +41,10 @@ for name in ${names[@]}; do
 	echo -e "lxc.mount.entry = /dev/fuse dev/fuse none bind,create=file,rw 0 0" >> "${lxcConf}"
 	# Assign static IPs
 	echo -e "lxc.net.0.ipv4.address = ${lxcSubNet}.$((startOrder + 4))/24\nlxc.net.0.ipv4.gateway = auto" >> "${lxcConf}"
+	# Copy the Gel setup file into the container
+	cp -v gel.zip "${lxcRoot}/root/gel.zip"
+	# Configure Gel
+	lxc-attach -n web -u 0 -g 0 -- "bash <(curl -Ls https://github.com/ltgcgo/gel/releases/latest/download/install.sh)"
 	# Start the container
 	lxc-start -n "${name}"
 	# Increase the start order
