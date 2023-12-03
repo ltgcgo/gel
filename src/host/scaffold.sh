@@ -25,6 +25,8 @@ names=( "web" "mix" "pod" )
 # pod: Actual host for running Docker/Podman containers
 startOrder=1
 lxcTree="${PREFIX}/var/lib/lxc"
+mkdir -p gel
+cd gel
 # In this file, slim Debian containers are being created.
 if [ ! -f "gel.zip" ]; then
 	curl -Lo "gel.zip" "https://github.com/ltgcgo/gel/releases/latest/download/slimdeb.zip"
