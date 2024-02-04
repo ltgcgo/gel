@@ -3,6 +3,17 @@
 # These scripts will create a series of privileged containers for convenience,
 # but will eventually move to root-based unprivileged containers.
 #
+# Detect if apparmor exists
+if [ -f "/usr/local/sbin/apparmor_parser" ] ; then
+	echo "AppArmor integrity check passed."
+elif [ -f "/usr/sbin/apparmor_parser" ] ; then
+	echo "AppArmor integrity check passed."
+elif [ -f "/sbin/apparmor_parser" ] ; then
+	echo "AppArmor integrity check passed."
+else
+	echo "AppArmor not installed. Install the \"apparmor\" (apparmor_parser) package first."
+	exit 1
+fi
 cd ~root
 # Automatically adapt to host architecture
 hostArch=$(uname -m)
