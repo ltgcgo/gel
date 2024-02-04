@@ -55,7 +55,7 @@ for name in ${names[@]}; do
 	# Enable FUSE
 	echo -e "lxc.mount.entry = /dev/fuse dev/fuse none bind,create=file,rw 0 0" >> "${lxcConf}"
 	# Assign static IPs
-	echo -e "lxc.net.0.ipv4.address = ${lxcSubNet}.$((startOrder + 4))/24\nlxc.net.0.ipv4.gateway = auto" >> "${lxcConf}"
+	echo -e "lxc.net.0.ipv4.address = ${lxcSubNet}.$((startOrder + 4))/24\nlxc.net.0.ipv4.gateway = auto\nlxc.net.0.ipv6.address = fc11:4514:1919:810::$(printf %x $((startOrder + 4)))\nlxc.net.0.ipv6.gateway = auto" >> "${lxcConf}"
 	# Copy the Gel setup file into the container
 	cp -v gel.zip "${lxcRoot}/root/gel.zip"
 	cp -v gelInst.sh "${lxcRoot}/root/install.sh"
