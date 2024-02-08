@@ -2,8 +2,8 @@
 # Read the distro name
 rawId=$(cat $PREFIX/etc/os-release | grep -E "^ID=" | cut -d'=' -f2)
 distroId="$(echo $rawId | sed -e "s/\"//g")"
-if [ "$distroId" == "" ]; then
-	if [ "$TERMUX_VERSION" != "" ]; then
+if [[ "$distroId" == "" ]]; then
+	if [[ "$TERMUX_VERSION" != "" ]]; then
 		distroId="termux"
 	else
 		echo "Failed to read distro name."
