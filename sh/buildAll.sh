@@ -6,4 +6,5 @@ shx build rocky
 #shx build fedora
 shx build slimdeb
 shx build slimsuse
+shx build slimrock
 exit
