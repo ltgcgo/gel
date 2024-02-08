@@ -3,15 +3,44 @@
 # These scripts will create a series of privileged containers for convenience,
 # but will eventually move to root-based unprivileged containers.
 #
-# Detect if apparmor exists
-if [ -f "/usr/local/sbin/apparmor_parser" ] ; then
-	echo "AppArmor integrity check passed."
-elif [ -f "/usr/sbin/apparmor_parser" ] ; then
-	echo "AppArmor integrity check passed."
-elif [ -f "/sbin/apparmor_parser" ] ; then
-	echo "AppArmor integrity check passed."
+
+# Global variables
+REQUIRES_APPARMOR=1
+ERRORED_EXIT=0
+if [ -f "/etc/redhat-release" ] ; then
+	# Fallback for RHEL
+	REQUIRES_APPARMOR=0
+fi
+if [ -f "/usr/share/lxc/templates/lxc-download" ] ; then
+	echo "LXC template downloader check passed."
 else
-	echo "AppArmor not installed. Install the \"apparmor\" (apparmor_parser) package first."
+	echo "LXC template downloader not available."
+	ERRORED_EXIT=$(($ERRORED_EXIT+1))
+fi
+# Detect if apparmor exists
+if [ "$REQUIRES_APPARMOR" == "1" ] ; then
+	# AppArmor needed
+	if [ -f "/usr/local/sbin/apparmor_parser" ] ; then
+		echo "AppArmor integrity check passed."
+	elif [ -f "/usr/sbin/apparmor_parser" ] ; then
+		echo "AppArmor integrity check passed."
+	elif [ -f "/sbin/apparmor_parser" ] ; then
+		echo "AppArmor integrity check passed."
+	else
+		echo "AppArmor is not installed on this system. Install the \"apparmor\" (apparmor_parser) package first."
+		ERRORED_EXIT=$(($ERRORED_EXIT+1))
+	fi
+else
+	echo "AppArmor integrity check skipped. This system does not use AppArmor."
+fi
+# Detect if root access is available
+if [ "$(whoami)" != "root" ] ; then
+	echo "This script requires root permissions."
+	ERRORED_EXIT=$(($ERRORED_EXIT+1))
+fi
+# Total error counts
+if [ "$ERRORED_EXIT" != "0" ] ; then
+	echo "Encountered ${ERRORED_EXIT} error(s). The script can no longer run."
 	exit 1
 fi
 cd ~root
