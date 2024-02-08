@@ -9,8 +9,15 @@ cp -rv distro/etc/* /etc/
 echo "Running shared setup scripts..."
 cd shared/sh
 bash setup.sh
-echo "Running distro setup scripts..."
+echo "Preparing distro..."
 cd ../../distro/sh
+if [ -f "./init.sh" ] ; then
+	echo "Running distro init scripts..."
+	bash init.sh
+else
+	echo "Init script not provided. Skipping..."
+fi
+echo "Running distro setup scripts..."
 bash setup.sh
 if [ -f "./native.sh" ] ; then
 	echo "Running native setup scripts..."

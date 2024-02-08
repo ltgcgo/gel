@@ -7,13 +7,13 @@ WORKDIR /root
 
 # Copy and run
 COPY ./shared/etc/ /etc/
-COPY ./shared/sh/ /root/sh/shared
+COPY ./shared/sh/ /root/gel/shared/sh
 COPY ./etc/ /etc/
-COPY ./sh/ /root/sh/distro
-RUN bash /root/sh/distro/init.sh
-RUN bash /root/sh/shared/setup.sh
-RUN bash /root/sh/distro/setup.sh
-RUN bash /root/sh/shared/post.sh
+COPY ./sh/ /root/gel/distro
+RUN bash /root/gel/distro/sh/init.sh
+RUN bash /root/gel/shared/sh/setup.sh
+RUN bash /root/gel/distro/sh/setup.sh
+RUN bash /root/gel/shared/sh/post.sh
 
 # Run forever
 EXPOSE 1122
