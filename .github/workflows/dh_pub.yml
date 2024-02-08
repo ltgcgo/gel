@@ -47,7 +47,9 @@ jobs:
         run: PATH=./:$PATH bash ./shx submit slimsuse
       - name: Build and push the openSUSE flavour
         run: PATH=./:$PATH bash ./shx submit opensuse
-      - name: Build and push the Rocky flavour
+      - name: Build and push the Rocky Slim flavour
         run: PATH=./:$PATH bash ./shx submit rocky
-      - name: Build and push the Fedora flavour
-        run: PATH=./:$PATH bash ./shx submit fedora
+      - name: Build and push the Rocky flavour
+        run: PATH=./:$PATH bash ./shx submit slimrock
+      # - name: Build and push the Fedora flavour
+        # run: PATH=./:$PATH bash ./shx submit fedora
