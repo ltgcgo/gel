@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /root/sh/shared
+cd ~root/gel/shared/sh
 bash defaults.sh
 exit
