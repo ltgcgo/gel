@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 if [ "$(whoami)" == "root" ] ; then
 	cp -nv $PREFIX/etc/skel/.* ~/
-	chsh -s /bin/zsh && echo "Default shell switched to ZSH."
+	chsh -s "$(which zsh)" && echo "Default shell switched to ZSH."
 	if [ -e "$PREFIX/home" ] ; then
 		echo "Copying ZSH default configuration to every applicable user..."
 		ls -1 $PREFIX/home | while IFS= read -r curUser; do
