@@ -16,7 +16,7 @@ if [ "$(whoami)" == "root" ] ; then
 					cp -nv $PREFIX/etc/skel/.* "$PREFIX/home/$curUser/"
 					echo "success."
 					echo "Forcing ZSH usage for user [$curUser] ..."
-					chsh $curUser -s /bin/zsh
+					chsh $curUser -s "$(which zsh)"
 				fi
 			else
 				echo "fake. Skipping..."

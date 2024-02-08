@@ -64,6 +64,8 @@ for name in ${names[@]}; do
 	lxc-start -n "${name}"
 	# Configure Gel
 	lxc-attach -n "${name}" -u 0 -g 0 -- sh "/root/install.sh"
+	# Show the container name
+	lxc-attach -n "${name}" -u 0 -g 0 -- echo "${name}" > /etc/zsh/.customShellName
 	# Increase the start order
 	startOrder=$(($startOrder+1))
 done
