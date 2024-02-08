@@ -9,7 +9,7 @@ WORKDIR /root
 COPY ./shared/etc/ /etc/
 COPY ./shared/sh/ /root/gel/shared/sh
 COPY ./etc/ /etc/
-COPY ./sh/ /root/gel/distro
+COPY ./sh/ /root/gel/distro/sh
 RUN bash /root/gel/distro/sh/init.sh
 RUN bash /root/gel/shared/sh/setup.sh
 RUN bash /root/gel/distro/sh/setup.sh
