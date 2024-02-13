@@ -43,15 +43,18 @@ fi
 if [ ! -f "$(which bash)" ]; then
 	$installCmd bash
 fi
-if [ ! -f "$(which unzip)" ]; then
-	$installCmd unzip
+if [ ! -f "$(which tar)" ]; then
+	$installCmd tar
+fi
+if [ ! -f "$(which lzip)" ]; then
+	$installCmd lzip
 fi
 cd ~
 mkdir -p gel
 cd gel
-if [ ! -f "./gel.zip" ]; then
-	curl -Lo gel.zip "https://github.com/ltgcgo/gel/releases/latest/download/${distroId}.zip"
+if [ ! -f "./gel.tlz" ]; then
+	curl -Lo gel.tlz "https://github.com/ltgcgo/gel/releases/latest/download/${distroId}.tlz"
 fi
-unzip gel.zip
+tar xf --lzip gel.tlz
 bash shared/sh/native.sh
 exit

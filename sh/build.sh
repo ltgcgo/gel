@@ -1,10 +1,11 @@
 #!/bin/bash
+EXT_NAME="tlz"
 if [ "${1}" == "" ] ; then
 	echo "Image name not defined."
 elif [ -d "./src/${1}/" ] ; then
 	echo "Installer bundle for target \"${1}\" started."
 	rm -r "./build/${1}" 2> /dev/null
-	rm "./build/${1}.txz" 2> /dev/null
+	rm "./build/${1}.${EXT_NAME}" 2> /dev/null
 	mkdir -p "./build/${1}"
 	cd "./build/${1}"
 	echo "Copying required files..."
@@ -16,7 +17,7 @@ elif [ -d "./src/${1}/" ] ; then
 	cp -Lr "../../src/${1}/sh" "./distro"
 	echo "Bundling..."
 	tar cf "../${1}.tar" *
-	xz -9 -c "../${1}.tar" > "../${1}.txz"
+	lzip -k9 -c "../${1}.tar" > "../${1}.${EXT_NAME}"
 	rm "../${1}.tar"
 	echo "Installer bundle emit finished."
 	cd ../..
