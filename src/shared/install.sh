@@ -31,7 +31,7 @@ elif [ -e "$(which zypper 2>/dev/null)" ]; then
 elif [ -e "$(which apk 2>/dev/null)" ]; then
 	installCmd="apk add"
 else
-	echo "not found."
+	echo "Supported package manager not found."
 	exit 1
 fi
 if [ "$preInstCmd" != "" ]; then
