@@ -7,7 +7,7 @@ dnf install -y ca-certificates
 echo "Installation stage 2..."
 dnf install -y systemd gpg bash zsh openssh-server shadow-utils \
 	unzip zip tar bzip2 lzip brotli zopfli pigz lbzip2 xz \
-	net-tools iputils traceroute tcptraceroute psmisc iptables-nft procps-ng dnsmasq \
+	net-tools bind-utils iputils traceroute tcptraceroute psmisc iptables-nft procps-ng dnsmasq \
 	nano tree netcat socat pv git screen htop sqlite
 echo "Installation stage 3..."
 dnf install -y libstdc++

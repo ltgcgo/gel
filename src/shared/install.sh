@@ -24,8 +24,10 @@ installCmd=
 if [ -e "$(which dpkg 2>/dev/null)" ]; then
 	preInstCmd="apt update -y"
 	installCmd="apt install -y"
-elif [ -e "$(which rpm 2>/dev/null)" ]; then
+elif [ -e "$(which dnf 2>/dev/null)" ]; then
 	installCmd="dnf install -y"
+elif [ -e "$(which zyper 2>/dev/null)" ]; then
+	installCmd="zypper in -y"
 elif [ -e "$(which apk 2>/dev/null)" ]; then
 	installCmd="apk add"
 else
