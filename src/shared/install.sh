@@ -55,6 +55,6 @@ cd gel
 if [ ! -f "./gel.tlz" ]; then
 	curl -Lo gel.tlz "https://github.com/ltgcgo/gel/releases/latest/download/${distroId}.tlz"
 fi
-tar xf --lzip gel.tlz
+tar --lzip -xf gel.tlz
 bash shared/sh/native.sh
 exit
