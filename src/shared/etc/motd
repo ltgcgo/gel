@@ -1,6 +1,6 @@
 
 [1;37mWelcome to Gel, a customized Linux server image![0m
-This server image is built on top of __FLAVOUR__.
+This server image (__VERSION__) is built on top of __FLAVOUR__.
 
 Root:    doas su
 

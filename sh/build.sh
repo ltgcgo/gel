@@ -15,6 +15,8 @@ elif [ -d "./src/${1}/" ] ; then
 	mkdir -p "distro"
 	cp -Lr "../../src/${1}/etc" "./distro"
 	cp -Lr "../../src/${1}/sh" "./distro"
+	echo "Filling for values..."
+	sed -i "s/__VERSION__/$(cat ../../build_version)/g" "./shared/etc/motd"
 	echo "Bundling..."
 	tar cf "../${1}.tar" *
 	lzip -k9 -c "../${1}.tar" > "../${1}.${EXT_NAME}"
