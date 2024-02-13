@@ -26,7 +26,7 @@ if [ -e "$(which dpkg 2>/dev/null)" ]; then
 	installCmd="apt install -y"
 elif [ -e "$(which dnf 2>/dev/null)" ]; then
 	installCmd="dnf install -y"
-elif [ -e "$(which zyper 2>/dev/null)" ]; then
+elif [ -e "$(which zypper 2>/dev/null)" ]; then
 	installCmd="zypper in -y"
 elif [ -e "$(which apk 2>/dev/null)" ]; then
 	installCmd="apk add"
