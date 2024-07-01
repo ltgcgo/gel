@@ -1,6 +1,6 @@
 #!/bin/bash
 cd ~root/gel/distro/sh
-sed -i "s/__FLAVOUR__/Rocky Linux Slim/g" $PREFIX/etc/motd
+sed -i "s/__FLAVOUR__/AlmaLinux Slim/g" $PREFIX/etc/motd
 #bash init.sh
 bash install.sh
 #dnf clean dbcache

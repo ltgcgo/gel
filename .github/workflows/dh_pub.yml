@@ -10,7 +10,7 @@ on:
     - cron: '30 8 * * 5'
   push:
     branches: [ "main" ]
-    paths: 
+    paths:
       - "build_version"
       - ".github/workflows/**_pub.yml"
 
@@ -28,7 +28,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Log in to ${{ env.REGISTRY }}
         uses: redhat-actions/podman-login@v1
         with:

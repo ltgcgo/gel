@@ -1,11 +1,10 @@
 #!/bin/bash
 cd ~root/gel/distro/sh
-sed -i "s/__FLAVOUR__/Rocky Linux Slim/g" $PREFIX/etc/motd
+sed -i "s/__FLAVOUR__/AlmaLinux/g" $PREFIX/etc/motd
 #bash init.sh
 bash install.sh
 #dnf clean dbcache
 dnf clean all
-bash cleanup.sh
 echo "Applying ZSH key fix..."
 echo 'bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
