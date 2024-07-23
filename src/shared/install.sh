@@ -1,4 +1,17 @@
 #!/bin/sh
+rawArch=$(uname -m)
+transArchDeb=$rawArch
+transArchDnf=$rawArch
+case $rawArch in
+	"x86_64" | "amd64")
+		transArchDeb="amd64"
+		transArchDnf="x86_64"
+		;;
+	"arm64" | "armv8l" | "aarch64")
+		transArchDeb="arm64"
+		transArchDnf="aarch64"
+		;;
+esac
 # Read the distro name
 rawId=$(cat $PREFIX/etc/os-release | grep -E "^ID=" | cut -d'=' -f2)
 distroId="$(echo $rawId | sed -e "s/\"//g")"
@@ -89,6 +102,10 @@ if [ -z "$DRY_RUN" -a "$DRY_RUN" != " " ]; then
 	fi
 	if [ ! -f "$(which lzip)" ]; then
 		$installCmd lzip
+		if [ "$?" != "0" ]; then
+			curl -Lso "lzip.rpm" "https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/Packages/l/lzip-1.22-3.el9.${transArchDnf}.rpm"
+			$installCmd --nogpgcheck "lzip.rpm"
+		fi
 	fi
 	cd ~
 	mkdir -p gel
