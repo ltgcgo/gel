@@ -1,12 +1,11 @@
 #!/bin/bash
 echo "Pre-install..."
-rm -f /etc/dnf/protected.d/sudo.conf
-dnf remove -y sudo
+# Nothing
 echo "Installation stage 1..."
-dnf install -y ca-certificates
+tdnf install -y ca-certificates
 echo "Installation stage 2..."
-dnf install -y bash zsh openssh-server shadow \
-	unzip zip \
+tdnf install -y bash zsh openssh-server shadow \
+	unzip zip tar \
 	net-tools iputils psmisc nftables procps-ng dnsmasq \
 	nano tree netcat sqlite
 echo "Installation stage 3..."
