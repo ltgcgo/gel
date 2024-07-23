@@ -2,7 +2,7 @@
 # Read the distro name
 rawId=$(cat $PREFIX/etc/os-release | grep -E "^ID=" | cut -d'=' -f2)
 distroId="$(echo $rawId | sed -e "s/\"//g")"
-if [[ "$distroId" == "" ]]; then
+if [ -z "$distroId" -a "$distroId" != " " ]; then
 	if [[ "$TERMUX_VERSION" != "" ]]; then
 		distroId="termux"
 	else
@@ -74,30 +74,48 @@ else
 	echo "Supported package manager not found."
 	exit 1
 fi
-if [ "$preInstCmd" != "" ]; then
-	$preInstCmd
+if [ -z "$DRY_RUN" -a "$DRY_RUN" != " " ]; then
+	if [ "$preInstCmd" != "" ]; then
+		$preInstCmd
+	fi
+	if [ ! -f "$(which curl)" ]; then
+		$installCmd curl
+	fi
+	if [ ! -f "$(which bash)" ]; then
+		$installCmd bash
+	fi
+	if [ ! -f "$(which tar)" ]; then
+		$installCmd tar
+	fi
+	if [ ! -f "$(which lzip)" ]; then
+		$installCmd lzip
+	fi
+	cd ~
+	mkdir -p gel
+	cd gel
 fi
-if [ ! -f "$(which curl)" ]; then
-	$installCmd curl
-fi
-if [ ! -f "$(which bash)" ]; then
-	$installCmd bash
-fi
-if [ ! -f "$(which tar)" ]; then
-	$installCmd tar
-fi
-if [ ! -f "$(which lzip)" ]; then
-	$installCmd lzip
-fi
-cd ~
-mkdir -p gel
-cd gel
 if [ ! -f "./gel.tlz" ]; then
-	curl -Is https://raw.githubusercontent.com/ > /dev/null
-	curl -Lo gel.tlz "https://github.com/ltgcgo/gel/releases/latest/download/${distroId}.tlz"
+	getPrefix="https://github.com/ltgcgo/gel/releases/latest/download"
+	echo "Testing connectivity to GitHub..."
+	curl -ILs "https://raw.githubusercontent.com/" > /dev/null
+	if [ "$?" = "0" ]; then
+		echo "Downloading configuration data from GitHub."
+	else
+		echo "Downloading configuration data from Codeberg."
+		getPrefix="https://codeberg.org/ltgc/gel/releases/download/latest"
+	fi
+	if [ -z "$DRY_RUN" -a "$DRY_RUN" != " " ]; then
+		curl -Lo gel.tlz "${getPrefix}/${distroId}.tlz"
+	else
+		echo "Skipping download due to dry run."
+	fi
 else
 	echo "Using the local install package."
 fi
-lzip -d -c gel.tlz | tar -xf -
-bash shared/sh/native.sh
+if [ -z "$DRY_RUN" -a "$DRY_RUN" != " " ]; then
+	lzip -d -c gel.tlz | tar -xf -
+	bash shared/sh/native.sh
+else
+	echo "Skipping installation due to dry run."
+fi
 exit
