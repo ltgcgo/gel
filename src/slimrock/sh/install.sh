@@ -6,7 +6,7 @@ echo "Installation stage 1..."
 dnf install -y ca-certificates
 echo "Installation stage 2..."
 dnf install -y systemd bash zsh openssh-server shadow-utils \
-	unzip zip tar bzip2 brotli xz \
+	unzip zip tar brotli \
 	net-tools bind-utils iputils psmisc iptables-nft procps-ng dnsmasq \
 	nano tree netcat pv sqlite
 echo "Installation stage 3..."
