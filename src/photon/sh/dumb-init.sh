@@ -9,7 +9,7 @@ case $rawArch in
 		transArch="arm64"
 		;;
 esac
-lzip -k -d -c "${transArch}/dumb-init_1.2.5.lz" > "/sbin/dumb-init"
-ln -s ./dumb-init /sbin/init
-chmod +x /sbin/dumb-init
+#lzip -k -d -c "${transArch}/dumb-init_1.2.5.lz" > "/sbin/dumb-init"
+#ln -s ./dumb-init /sbin/init
+#chmod +x /sbin/dumb-init
 exit

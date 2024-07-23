@@ -16,5 +16,5 @@ RUN bash /root/gel/shared/sh/post.sh
 
 # Run forever
 EXPOSE 1122
-CMD ["/sbin/init", "sshd", "-f", "/etc/ssh/sshd_config"]
+CMD ["/sbin/init"]
 #CMD ["sleep", "7d"]

@@ -4,7 +4,7 @@ echo "Pre-install..."
 echo "Installation stage 1..."
 tdnf install -y ca-certificates
 echo "Installation stage 2..."
-tdnf install -y bash zsh openssh-server shadow \
+tdnf install -y systemd bash zsh openssh-server shadow \
 	unzip zip tar \
 	net-tools iputils psmisc nftables procps-ng dnsmasq \
 	nano tree netcat sqlite

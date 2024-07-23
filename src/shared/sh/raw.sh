@@ -17,6 +17,9 @@ if [ -e "$(which dpkg 2>/dev/null)" ]; then
 elif [ -e "$(which rpm 2>/dev/null)" ]; then
 	echo "using rpm."
 	installCmd="rpm -ivh"
+elif [ -e "$(which tdnf 2>/dev/null)" ]; then
+	echo "using tdnf."
+	installCmd="tdnf install -y --nogpgcheck"
 elif [ -e "$(which apk 2>/dev/null)" ]; then
 	echo "using apk."
 	installCmd="apk add"
