@@ -47,6 +47,8 @@ jobs:
         run: PATH=./:$PATH bash ./shx submit slimalma
       - name: Build and push the Rocky Slim flavour
         run: PATH=./:$PATH bash ./shx submit slimrock
+      - name: Build and push the Photon flavour
+        run: PATH=./:$PATH bash ./shx submit photon
       - name: Build and push the Alpine flavour
         run: PATH=./:$PATH bash ./shx submit alpine
       - name: Build and push the Debian flavour
