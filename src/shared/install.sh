@@ -114,7 +114,7 @@ fi
 if [ ! -f "./gel.tlz" ]; then
 	getPrefix="https://github.com/ltgcgo/gel/releases/latest/download"
 	echo "Testing connectivity to GitHub..."
-	curl -ILs "https://raw.githubusercontent.com/" > /dev/null
+	curl -ILs -m 8 "https://raw.githubusercontent.com/" > /dev/null
 	if [ "$?" = "0" ]; then
 		echo "Downloading configuration data from GitHub."
 	else
