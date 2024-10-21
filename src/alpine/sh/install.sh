@@ -12,4 +12,5 @@ echo "Post-install..."
 mkdir -p /run/sshd
 rc-update add sshd default
 cp ./systemctl /bin
+cp ./shutdown /sbin
 exit

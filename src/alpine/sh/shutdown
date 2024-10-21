@@ -1,0 +1,10 @@
+#!/bin/bash
+case $1 in
+	"now")
+		poweroff
+		;;
+	*)
+		poweroff -d ${1/s/}
+		;;
+esac
+exit
