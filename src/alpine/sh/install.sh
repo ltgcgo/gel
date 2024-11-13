@@ -11,6 +11,7 @@ apk add openrc doas gpg gpgv bash zsh zsh-vcs openssh-server \
 echo "Post-install..."
 mkdir -p /run/sshd
 rc-update add sshd default
-cp ./systemctl /bin
-cp ./shutdown /sbin
+mv ./systemctl /bin
+mv ./shutdown /sbin
+mv ./sgerrand.rsa.pub /etc/apk/keys/
 exit
