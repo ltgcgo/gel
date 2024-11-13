@@ -5,6 +5,8 @@ bash install.sh
 if [ "$MODE_NATIVE" != "" ]; then
 	apk add libcap-utils
 fi
+echo "Removing glibc specific files..."
+rm $PREFIX/etc/gai.conf
 echo "Applying ZSH key fix..."
 echo 'bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
