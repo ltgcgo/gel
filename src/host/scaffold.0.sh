@@ -1,5 +1,8 @@
 #!/bin/bash
-# Root-owned unprivileged containers baby!
+#
+# These scripts will create a series of privileged containers for convenience,
+# but will eventually move to root-based unprivileged containers.
+#
 
 # Global variables
 REQUIRES_APPARMOR=1
@@ -14,7 +17,6 @@ else
 	echo "LXC template downloader not available."
 	ERRORED_EXIT=$(($ERRORED_EXIT+1))
 fi
-
 # Detect if apparmor exists
 if [ "$REQUIRES_APPARMOR" == "1" ] ; then
 	# AppArmor needed
@@ -31,19 +33,16 @@ if [ "$REQUIRES_APPARMOR" == "1" ] ; then
 else
 	echo "AppArmor integrity check skipped. This system does not use AppArmor."
 fi
-
 # Detect if root access is available
 if [ "$(whoami)" != "root" ] ; then
 	echo "This script requires root permissions."
 	ERRORED_EXIT=$(($ERRORED_EXIT+1))
 fi
-
 # Total error counts
 if [ "$ERRORED_EXIT" != "0" ] ; then
 	echo "Encountered ${ERRORED_EXIT} error(s). The script can no longer run."
 	exit 1
 fi
-
 cd ~root
 # Automatically adapt to host architecture
 hostArch=$(uname -m)
@@ -56,13 +55,11 @@ case $hostArch in
 		targetArch="arm64"
 		;;
 esac
-
 # Fetch the LXC container subnet
 lxcSubNet="$(ip addr show lxcbr0 | grep "inet " | awk -F ' *|:' '/inet/{print $3}' | cut -d'/' -f1 | cut -d'.' -f1,2,3)"
 lxcSubNet=${lxcSubNet:-10.0.3}
-
 # Define names for the containers
-names=( "web" "mix" "pod" "net" )
+names=( "web" "mix" "pod" )
 # web: Web servers, static files, etc
 # mix: Mixnet access, port forwarders for mixnet exposure, etc
 # pod: Actual host for running Docker/Podman containers
@@ -70,25 +67,43 @@ startOrder=1
 lxcTree="${PREFIX}/var/lib/lxc"
 mkdir -p gel
 cd gel
-
-# In this file, slim Alpine containers are being created.
+# In this file, slim Debian containers are being created.
 if [ ! -f "gel.zip" ]; then
-	curl -Lo "gel.zip" "https://github.com/ltgcgo/gel/releases/latest/download/slimalp.zip"
+	curl -Lo "gel.zip" "https://github.com/ltgcgo/gel/releases/latest/download/slimdeb.zip"
 fi
 curl -Lo "gelInst.sh" "https://github.com/ltgcgo/gel/releases/latest/download/install.sh"
-
-# Create the base container to copy from
-lxc-create -t download -n base -- --dist alpine --release 3.21 --arch $targetArch
-# Copy the setup files of Gel into the containers
-mkdir -p "${lxcTree}/base/rootfs/root/gel"
-cp -v gel.zip "${lxcTree}/base/rootfs/root/gel/gel.zip"
-cp -v gelInst.sh "${lxcTree}/base/rootfs/root/install.sh"
-# Start the container to begin configuration
-lxc-start -n base
-lxc-attach -n base -u 0 -g 0 -- sh "/root/install.sh"
-lxc-stop -n base
-
-# Create subsequent containers
-
-# All done!
+for name in ${names[@]}; do
+	# Set the config file name to write to
+	lxcPath="${lxcTree}/${name}"
+	lxcConf="${lxcPath}/config"
+	lxcRoot="${lxcPath}/rootfs"
+	# Create seperate LXC containers for different purposes
+	lxc-create -t download -n "${name}" -- --dist debian --release bookworm --arch $targetArch
+	# Set autostart
+	echo -e "\nlxc.start.order = ${startOrder}\nlxc.start.auto = 1\nlxc.start.delay = 4" >> "${lxcConf}"
+	# Enable FUSE
+	echo -e "lxc.mount.entry = /dev/fuse dev/fuse none bind,create=file,rw 0 0" >> "${lxcConf}"
+	# Assign static IPs
+	echo -e "lxc.net.0.ipv4.address = ${lxcSubNet}.$((startOrder + 4))/24\nlxc.net.0.ipv4.gateway = auto\nlxc.net.0.ipv6.address = fc11:4514:1919:810::$(printf %x $((startOrder + 4)))\nlxc.net.0.ipv6.gateway = auto" >> "${lxcConf}"
+	# Copy the Gel setup file into the container
+	mkdir -p "${lxcRoot}/root/gel"
+	cp -v gel.zip "${lxcRoot}/root/gel/gel.zip"
+	cp -v gelInst.sh "${lxcRoot}/root/install.sh"
+	# Start the container
+	lxc-start -n "${name}"
+	# Configure Gel
+	lxc-attach -n "${name}" -u 0 -g 0 -- sh "/root/install.sh"
+	# Show the container name
+	lxc-attach -n "${name}" -u 0 -g 0 -- echo "${name}" > /etc/zsh/.customShellName
+	# Increase the start order
+	startOrder=$(($startOrder+1))
+done
+# Enable TUN device in "mix"
+echo -e "lxc.mount.entry = /dev/net dev/net none bind,create=dir\nlxc.cgroup2.devices.allow = c 10:200 rwm" >> "${lxcTree}/mix/config"
+# Limit RAM usage in "mix"
+echo -e "lxc.cgroup2.memory.max = 256M" >> "${lxcTree}/mix/config"
+# Limit CPU usage in "mix"
+echo -e "lxc.cgroup2.cpu.max = 200000 1000000" >> "${lxcTree}/mix/config"
+# Limit CPU usage in "pod"
+echo -e "lxc.cgroup2.cpu.max = 400000 1000000" >> "${lxcTree}/pod/config"
 exit
