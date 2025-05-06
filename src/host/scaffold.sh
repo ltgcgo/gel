@@ -68,8 +68,8 @@ names=( "web" "mix" "pod" "net" )
 # pod: Actual host for running Docker/Podman containers
 startOrder=1
 lxcTree="${PREFIX}/var/lib/lxc"
-mkdir -p gel
-cd gel
+#mkdir -p gel
+#cd gel
 
 # In this file, slim Alpine containers are being created.
 if [ ! -f "gel.tlz" ]; then
@@ -83,12 +83,12 @@ fi
 lxc-create -t download -n base -- --dist alpine --release 3.21 --arch $targetArch
 # Copy the setup files of Gel into the containers
 mkdir -p "${lxcTree}/base/rootfs/root/gel"
-cp -v gel.zip "${lxcTree}/base/rootfs/root/gel/gel.zip"
-cp -v gelInst.sh "${lxcTree}/base/rootfs/root/install.sh"
+cp -v gel.tlz "${lxcTree}/base/rootfs/root/gel/gel.tlz"
+cp -v gelInst.sh "${lxcTree}/base/rootfs/root/gel/install.sh"
 # Start the container to begin configuration
 lxc-start -n base
 sleep 5s
-lxc-attach --clear-env -n base -u 0 -g 0 -v "GEL_SLIM=1" -- sh "/root/install.sh"
+lxc-attach --clear-env -n base -u 0 -g 0 -v "GEL_SLIM=1" -- sh "/root/gel/install.sh"
 lxc-stop -n base
 
 # Create subsequent containers

@@ -107,7 +107,7 @@ if [ -z "$DRY_RUN" -a "$DRY_RUN" != " " ]; then
 			$installCmd --nogpgcheck "lzip.rpm"
 		fi
 	fi
-	cd
+	cd "$PREFIX/root/"
 	mkdir -p gel
 	cd gel
 fi
@@ -130,6 +130,7 @@ else
 	echo "Using the local install package."
 fi
 if [ -z "$DRY_RUN" -a "$DRY_RUN" != " " ]; then
+	echo "Decompressing files..."
 	lzip -d -c gel.tlz | tar -xf -
 	bash shared/sh/native.sh
 else
