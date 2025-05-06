@@ -75,7 +75,9 @@ cd gel
 if [ ! -f "gel.zip" ]; then
 	curl -Lo "gel.zip" "https://github.com/ltgcgo/gel/releases/latest/download/slimalp.zip"
 fi
-curl -Lo "gelInst.sh" "https://github.com/ltgcgo/gel/releases/latest/download/install.sh"
+if [ ! -f "gelInst.sh" ]; then
+	curl -Lo "gelInst.sh" "https://github.com/ltgcgo/gel/releases/latest/download/install.sh"
+fi
 
 # Create the base container to copy from
 lxc-create -t download -n base -- --dist alpine --release 3.21 --arch $targetArch
@@ -85,7 +87,8 @@ cp -v gel.zip "${lxcTree}/base/rootfs/root/gel/gel.zip"
 cp -v gelInst.sh "${lxcTree}/base/rootfs/root/install.sh"
 # Start the container to begin configuration
 lxc-start -n base
-lxc-attach -n base -u 0 -g 0 -- sh "/root/install.sh"
+sleep 5s
+lxc-attach --clear-env -n base -u 0 -g 0 -v "GEL_SLIM=1" -- sh "/root/install.sh"
 lxc-stop -n base
 
 # Create subsequent containers

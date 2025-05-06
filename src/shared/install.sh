@@ -107,7 +107,7 @@ if [ -z "$DRY_RUN" -a "$DRY_RUN" != " " ]; then
 			$installCmd --nogpgcheck "lzip.rpm"
 		fi
 	fi
-	cd ~
+	cd
 	mkdir -p gel
 	cd gel
 fi
