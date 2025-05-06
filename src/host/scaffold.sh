@@ -72,8 +72,8 @@ mkdir -p gel
 cd gel
 
 # In this file, slim Alpine containers are being created.
-if [ ! -f "gel.zip" ]; then
-	curl -Lo "gel.zip" "https://github.com/ltgcgo/gel/releases/latest/download/slimalp.zip"
+if [ ! -f "gel.tlz" ]; then
+	curl -Lo "gel.tlz" "https://github.com/ltgcgo/gel/releases/latest/download/slimalp.tlz"
 fi
 if [ ! -f "gelInst.sh" ]; then
 	curl -Lo "gelInst.sh" "https://github.com/ltgcgo/gel/releases/latest/download/install.sh"
