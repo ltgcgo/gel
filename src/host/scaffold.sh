@@ -81,7 +81,7 @@ lxcTree="${PREFIX}/var/lib/lxc"
 echo 'LXC_DHCP_CONFILE=/etc/lxc/dhcp.conf' >> "${PREFIX}/etc/default/lxc-net"
 
 # Create the base container to copy from
-lxc-create -t download -n alpbase -- --dist alpine --release 3.21 --arch $targetArch
+lxc-create -t download -n alpbase -- --dist alpine --release 3.20 --arch $targetArch
 # Copy the setup files of Gel into the containers
 mkdir -p "${lxcTree}/alpbase/rootfs/root/gel"
 cp -v gel.tlz "${lxcTree}/alpbase/rootfs/root/gel/gel.tlz"
@@ -171,8 +171,8 @@ for name in ${names[@]}; do
 	echo "Finalizing \"${name}\"..."
 	subidConf="$((1048576+1048576*$startOrder))"
 	chown -R "${subidConf}:${subidConf}" "${lxcTree}/${name}/rootfs"
-	#echo "Starting \"${name}\"..."
-	#lxc-start -n "${name}"
+	echo "Starting \"${name}\"..."
+	lxc-start -n "${name}"
 	startOrder=$(($startOrder+1))
 done
 
