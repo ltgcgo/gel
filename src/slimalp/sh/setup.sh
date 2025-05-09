@@ -5,6 +5,8 @@ bash install.sh
 bash cleanup.sh
 if [ "$MODE_NATIVE" != "" ]; then
 	apk add libcap-utils
+	setcap cap_setuid+ep /usr/bin/newuidmap
+	setcap cap_setgid+ep /usr/bin/newgidmap
 fi
 echo "Removing glibc specific files..."
 rm $PREFIX/etc/gai.conf

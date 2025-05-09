@@ -155,8 +155,8 @@ echo "ControlPort 9051" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
 echo -e "lxc.include = /usr/share/lxc/config/nesting.conf" >> "${lxcTree}/pod/config"
 echo -e "lxc.cgroup2.cpu.max = 400000 1000000" >> "${lxcTree}/pod/config"
 echo -e "lxc.prlimit.nofile = 1048576" >> "${lxcTree}/pod/config"
-echo -e "user:524288:524288" >> "${lxcTree}/pod/rootfs/etc/subuid"
-echo -e "user:524288:524288" >> "${lxcTree}/pod/rootfs/etc/subgid"
+echo -e "user:131074:524288" >> "${lxcTree}/pod/rootfs/etc/subuid"
+echo -e "user:131074:524288" >> "${lxcTree}/pod/rootfs/etc/subgid"
 lxc-start -n "pod"
 lxc-attach -n "pod" -u 0 -- apk add podman podman-compose
 #lxc-attach -n "pod" -u 1000 -- podman system migrate
