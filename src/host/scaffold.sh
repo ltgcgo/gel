@@ -136,9 +136,12 @@ echo -e "lxc.cgroup2.memory.max = 256M" >> "${lxcTree}/mix/config"
 echo -e "lxc.cgroup2.cpu.max = 200000 1000000" >> "${lxcTree}/mix/config"
 lxc-start -n "mix"
 lxc-attach -n "mix" -u 0 -- apk add tor nyx i2pd
+lxc-attach -n "mix" -u 0 -- systemctl enable tor
+lxc-attach -n "mix" -u 0 -- systemctl enable i2pd
 lxc-stop -n "mix"
 sed -i "s/ipv6 = false/ipv6 = true/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
-sed -i 's/# bandwidth = L/bandwidth = P/g' "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
+sed -i 's/# bandwidth = L/bandwidth = 5120/g' "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
+sed -i 's/# notransit = true/notransit = true/g' "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
 sed -i "s/# address = 127.0.0.1/address = 10.0.3.5/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
 sed -i "s/# outproxy = http:\/\/false.i2p/outproxy = http:\/\/exit.stormycloud.i2p/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
 echo "ExcludeNodes {kp},{ir},{cu},{cn},{hk},{mo},{ru},{sy},{pk}" > "${lxcTree}/mix/rootfs/etc/tor/torrc"
@@ -155,7 +158,7 @@ echo -e "lxc.prlimit.nofile = 1048576" >> "${lxcTree}/pod/config"
 echo -e "user:524288:524288" >> "${lxcTree}/pod/rootfs/etc/subuid"
 echo -e "user:524288:524288" >> "${lxcTree}/pod/rootfs/etc/subgid"
 lxc-start -n "pod"
-lxc-attach -n "pod" -u 0 -- useradd -u 1000 -d /home/user -k /etc/skel -m -s "/bin/zsh"
+lxc-attach -n "pod" -u 0 -- useradd -u 1000 -d /home/user -k /etc/skel -m -s "/bin/zsh" user
 lxc-attach -n "pod" -u 0 -- apk add podman podman-compose
 #lxc-attach -n "pod" -u 1000 -- podman system migrate
 lxc-stop -n "pod"
@@ -163,10 +166,14 @@ lxc-stop -n "pod"
 # Configuring "net"
 
 # Finishing touches
+startOrder=0
 for name in ${names[@]}; do
-	echo "Finished \"${name}\"."
+	echo "Finalizing \"${name}\"..."
+	subidConf="$((1048576+1048576*$startOrder))"
+	chown -R "${subidConf}:${subidConf}" "${lxcTree}/${name}/rootfs"
 	#echo "Starting \"${name}\"..."
 	#lxc-start -n "${name}"
+	startOrder=$(($startOrder+1))
 done
 
 # All done!
