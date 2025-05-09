@@ -158,7 +158,6 @@ echo -e "lxc.prlimit.nofile = 1048576" >> "${lxcTree}/pod/config"
 echo -e "user:524288:524288" >> "${lxcTree}/pod/rootfs/etc/subuid"
 echo -e "user:524288:524288" >> "${lxcTree}/pod/rootfs/etc/subgid"
 lxc-start -n "pod"
-lxc-attach -n "pod" -u 0 -- useradd -u 1000 -d /home/user -k /etc/skel -m -s "/bin/zsh" user
 lxc-attach -n "pod" -u 0 -- apk add podman podman-compose
 #lxc-attach -n "pod" -u 1000 -- podman system migrate
 lxc-stop -n "pod"
@@ -175,6 +174,9 @@ for name in ${names[@]}; do
 	lxc-start -n "${name}"
 	startOrder=$(($startOrder+1))
 done
+
+# Why?
+lxc-attach -n "pod" -u 0 -- useradd -u 1000 -d /home/user -k /etc/skel -m -s "/bin/zsh" user
 
 # All done!
 exit
