@@ -145,8 +145,8 @@ echo "ExcludeNodes {kp},{ir},{cu},{cn},{hk},{mo},{ru},{sy},{pk}" > "${lxcTree}/m
 echo "StrictNodes 1" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
 echo "ClientUseIPv6 1" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
 echo "IPv6Exit 1" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
-echo "SocksListenAddress 10.0.3.5:9050" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
-echo "ControlListenAddress 10.0.3.5:9051" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
+echo "SocksPort 10.0.3.5:9050" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
+echo "ControlPort 10.0.3.5:9051" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
 
 # Configuring "pod"
 echo -e "lxc.include = /usr/share/lxc/config/nesting.conf" >> "${lxcTree}/pod/config"
