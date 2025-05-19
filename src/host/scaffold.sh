@@ -70,7 +70,7 @@ lxcSubNet="$(ip addr show lxcbr0 | grep "inet " | awk -F ' *|:' '/inet/{print $3
 lxcSubNet=${lxcSubNet:-10.0.3}
 
 # Define names for the containers
-names=( "web" "mix" "pod" "net" )
+names=( "web" "mix" "net" "pod" )
 # web: Web servers, static files, etc
 # mix: Mixnet access, port forwarders for mixnet exposure, etc
 # pod: Actual host for running Docker/Podman containers
@@ -119,12 +119,13 @@ for name in ${names[@]}; do
 	echo "${name}" > "${lxcRoot}/etc/zsh/.customShellName"
 	# Configure subordinate IDs for unprivileged slices
 	subidConf="$((262144+131072*$startOrder))"
-	if [ "$startOrder" -gt 2 ]; then
+	if [ "$startOrder" -gt 3 ]; then
 		subidConf="$((917504+$subidConf))"
 	fi
 	echo "root:${subidConf}:131072" >> /etc/subuid
 	echo "root:${subidConf}:131072" >> /etc/subgid
 	echo -e "lxc.include = /usr/share/lxc/config/userns.conf\nlxc.idmap = u 0 ${subidConf} 131072\nlxc.idmap = g 0 ${subidConf} 131072" >> "${lxcConf}"
+	echo -e "lxc.include = /usr/share/lxc/config/nesting.conf" >> "${lxcConf}"
 	chmod 755 "${lxcPath}"
 	chmod 755 "${lxcRoot}"
 	chmod 640 "${lxcConf}"
@@ -173,15 +174,14 @@ lxc-attach -n "mix" -u 0 -- bash -c 'echo "ControlPort 9051" >> "/etc/tor/torrc"
 lxc-stop -n "mix"
 
 # Configuring "pod"
-sed -i "s/root:524288:131072/root:524288:1048576/g" "/etc/subuid"
-sed -i "s/root:524288:131072/root:524288:1048576/g" "/etc/subgid"
+sed -i "s/root:655360:131072/root:524288:1048576/g" "/etc/subuid"
+sed -i "s/root:655360:131072/root:524288:1048576/g" "/etc/subgid"
 sed -i "s/ 131072/ 1048576/g" "${lxcTree}/pod/config"
-echo -e "lxc.include = /usr/share/lxc/config/nesting.conf" >> "${lxcTree}/pod/config"
 echo -e "lxc.cgroup2.cpu.max = 400000 1000000" >> "${lxcTree}/pod/config"
 echo -e "lxc.prlimit.nofile = 1048576" >> "${lxcTree}/pod/config"
-echo -e "user:131074:524288" >> "/etc/subuid"
-echo -e "user:131074:524288" >> "/etc/subgid"
-lxc-attach -n "pod" -u 0 -- bash -c 'echo -e '#!/sbin/openrc-run\n\ndescription="Garbage disposal"\n\ncommand="/bin/rm"\ncommand_args="-rf /tmp/*"\ncommand_background=true\npidfile="/run/$RC_SVCNAME.pid"' > "/etc/init.d/tmp-clean"'
+lxc-attach -n "pod" -u 0 -- bash -c 'echo -e "user:131074:524288" >> "/etc/subuid"'
+lxc-attach -n "pod" -u 0 -- bash -c 'echo -e "user:131074:524288" >> "/etc/subgid"'
+lxc-attach -n "pod" -u 0 -- bash -c 'echo -e "#!/sbin/openrc-run\n\ndescription=\"Garbage disposal\"\n\ncommand=\"/bin/rm\"\ncommand_args=\"-rf /tmp/*\"\ncommand_background=true\npidfile=\"/run/$RC_SVCNAME.pid\"" > "/etc/init.d/tmp-clean"'
 lxc-start -n "pod"
 sleep 4s
 lxc-attach -n "pod" -u 0 -- apk add podman podman-compose
@@ -203,7 +203,7 @@ startOrder=0
 for name in ${names[@]}; do
 	echo "Finalizing \"${name}\"..."
 	#subidConf="$((262144+131072*$startOrder))"
-	#if [ "$startOrder" -gt 2 ]; then
+	#if [ "$startOrder" -gt 3 ]; then
 		#subidConf="$((917504+$subidConf))"
 	#fi
 	#chown -R "${subidConf}:${subidConf}" "${lxcTree}/${name}/rootfs"
