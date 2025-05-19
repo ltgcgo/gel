@@ -119,7 +119,7 @@ for name in ${names[@]}; do
 	echo "${name}" > "${lxcRoot}/etc/zsh/.customShellName"
 	# Configure subordinate IDs for unprivileged slices
 	subidConf="$((262144+131072*$startOrder))"
-	if [ "$subidConf" -gt 2 ]; then
+	if [ "$startOrder" -gt 2 ]; then
 		subidConf="$((917504+$subidConf))"
 	fi
 	echo "root:${subidConf}:131072" >> /etc/subuid
@@ -159,18 +159,18 @@ lxc-attach -n "mix" -u 0 -- systemctl enable i2pd
 lxc-attach -n "mix" -u 0 -- bash -c 'mkdir -p /lib/modules/$(uname -r)'
 lxc-attach -n "mix" -u 0 -- systemctl enable yggdrasil
 lxc-attach -n "mix" -u 0 -- bash -c 'yggdrasil -genconf > /etc/yggdrasil.conf'
+lxc-attach -n "mix" -u 0 -- bash -c 'sed -i "s/ipv6 = false/ipv6 = true/g" "/etc/i2pd/i2pd.conf"'
+lxc-attach -n "mix" -u 0 -- bash -c 'sed -i "s/# bandwidth = L/bandwidth = 5120/g" "/etc/i2pd/i2pd.conf"'
+lxc-attach -n "mix" -u 0 -- bash -c 'sed -i "s/# notransit = true/notransit = true/g" "/etc/i2pd/i2pd.conf"'
+lxc-attach -n "mix" -u 0 -- bash -c 'sed -i "s/# address = 127.0.0.1/address = 10.0.3.4/g" "/etc/i2pd/i2pd.conf"'
+lxc-attach -n "mix" -u 0 -- bash -c 'sed -i "s/# outproxy = http:\/\/false.i2p/outproxy = http:\/\/exit.stormycloud.i2p/g" "/etc/i2pd/i2pd.conf"'
+lxc-attach -n "mix" -u 0 -- bash -c 'echo "ExcludeNodes {kp},{ir},{cu},{cn},{hk},{mo},{ru},{sy},{pk}" > "/etc/tor/torrc"'
+lxc-attach -n "mix" -u 0 -- bash -c 'echo "StrictNodes 1" >> "/etc/tor/torrc"'
+lxc-attach -n "mix" -u 0 -- bash -c 'echo "ClientUseIPv6 1" >> "/etc/tor/torrc"'
+lxc-attach -n "mix" -u 0 -- bash -c 'echo "IPv6Exit 1" >> "/etc/tor/torrc"'
+lxc-attach -n "mix" -u 0 -- bash -c 'echo "SocksPort 10.0.3.4:9050" >> "/etc/tor/torrc"'
+lxc-attach -n "mix" -u 0 -- bash -c 'echo "ControlPort 9051" >> "/etc/tor/torrc"'
 lxc-stop -n "mix"
-sed -i "s/ipv6 = false/ipv6 = true/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
-sed -i 's/# bandwidth = L/bandwidth = 5120/g' "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
-sed -i 's/# notransit = true/notransit = true/g' "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
-sed -i "s/# address = 127.0.0.1/address = 10.0.3.4/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
-sed -i "s/# outproxy = http:\/\/false.i2p/outproxy = http:\/\/exit.stormycloud.i2p/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
-echo "ExcludeNodes {kp},{ir},{cu},{cn},{hk},{mo},{ru},{sy},{pk}" > "${lxcTree}/mix/rootfs/etc/tor/torrc"
-echo "StrictNodes 1" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
-echo "ClientUseIPv6 1" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
-echo "IPv6Exit 1" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
-echo "SocksPort 10.0.3.4:9050" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
-echo "ControlPort 9051" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
 
 # Configuring "pod"
 sed -i "s/root:524288:131072/root:524288:1048576/g" "/etc/subuid"
@@ -179,9 +179,9 @@ sed -i "s/ 131072/ 1048576/g" "${lxcTree}/pod/config"
 echo -e "lxc.include = /usr/share/lxc/config/nesting.conf" >> "${lxcTree}/pod/config"
 echo -e "lxc.cgroup2.cpu.max = 400000 1000000" >> "${lxcTree}/pod/config"
 echo -e "lxc.prlimit.nofile = 1048576" >> "${lxcTree}/pod/config"
-echo -e "user:131074:524288" >> "${lxcTree}/pod/rootfs/etc/subuid"
-echo -e "user:131074:524288" >> "${lxcTree}/pod/rootfs/etc/subgid"
-echo -e '#!/sbin/openrc-run\n\ndescription="Garbage disposal"\n\ncommand="/bin/rm"\ncommand_args="-rf /tmp/*"\ncommand_background=true\npidfile="/run/$RC_SVCNAME.pid"' > "${lxcTree}/pod/rootfs/etc/init.d/tmp-clean"
+echo -e "user:131074:524288" >> "/etc/subuid"
+echo -e "user:131074:524288" >> "/etc/subgid"
+lxc-attach -n "pod" -u 0 -- bash -c 'echo -e '#!/sbin/openrc-run\n\ndescription="Garbage disposal"\n\ncommand="/bin/rm"\ncommand_args="-rf /tmp/*"\ncommand_background=true\npidfile="/run/$RC_SVCNAME.pid"' > "/etc/init.d/tmp-clean"'
 lxc-start -n "pod"
 sleep 4s
 lxc-attach -n "pod" -u 0 -- apk add podman podman-compose
@@ -202,11 +202,11 @@ systemctl restart lxc-net
 startOrder=0
 for name in ${names[@]}; do
 	echo "Finalizing \"${name}\"..."
-	subidConf="$((262144+131072*$startOrder))"
-	if [ "$subidConf" -gt 2 ]; then
-		subidConf="$((917504+$subidConf))"
-	fi
-	chown -R "${subidConf}:${subidConf}" "${lxcTree}/${name}/rootfs"
+	#subidConf="$((262144+131072*$startOrder))"
+	#if [ "$startOrder" -gt 2 ]; then
+		#subidConf="$((917504+$subidConf))"
+	#fi
+	#chown -R "${subidConf}:${subidConf}" "${lxcTree}/${name}/rootfs"
 	echo "Starting \"${name}\"..."
 	lxc-start -n "${name}"
 	startOrder=$(($startOrder+1))
