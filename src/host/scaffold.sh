@@ -70,7 +70,7 @@ lxcSubNet="$(ip addr show lxcbr0 | grep "inet " | awk -F ' *|:' '/inet/{print $3
 lxcSubNet=${lxcSubNet:-10.0.3}
 
 # Define names for the containers
-names=( "web" "mix" "net" "pod" )
+names=( "web" "mix" "pod" "net" )
 # web: Web servers, static files, etc
 # mix: Mixnet access, port forwarders for mixnet exposure, etc
 # pod: Actual host for running Docker/Podman containers
@@ -192,6 +192,7 @@ lxc-attach -n "net" -u 0 -- systemctl disable sshd
 lxc-stop -n "net"
 
 # Finishing touches
+systemctl restart lxc-net
 startOrder=0
 for name in ${names[@]}; do
 	echo "Finalizing \"${name}\"..."
