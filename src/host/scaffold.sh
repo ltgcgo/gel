@@ -149,7 +149,9 @@ lxc-start -n "mix"
 sleep 4s
 lxc-attach -n "mix" -u 0 -- apk add tor nyx i2pd yggdrasil
 lxc-attach -n "mix" -u 0 -- systemctl disable sshd
+lxc-attach -n "mix" -u 0 -- 'chown -R tor:nobody /var/lib/tor'
 lxc-attach -n "mix" -u 0 -- systemctl enable tor
+lxc-attach -n "mix" -u 0 -- 'chown -R i2pd:i2pd /var/lib/i2pd'
 lxc-attach -n "mix" -u 0 -- systemctl enable i2pd
 lxc-attach -n "mix" -u 0 -- bash -c 'mkdir -p /lib/modules/$(uname -r)'
 lxc-attach -n "mix" -u 0 -- systemctl enable yggdrasil
@@ -158,13 +160,13 @@ lxc-stop -n "mix"
 sed -i "s/ipv6 = false/ipv6 = true/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
 sed -i 's/# bandwidth = L/bandwidth = 5120/g' "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
 sed -i 's/# notransit = true/notransit = true/g' "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
-sed -i "s/# address = 127.0.0.1/address = 10.0.3.5/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
+sed -i "s/# address = 127.0.0.1/address = 10.0.3.4/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
 sed -i "s/# outproxy = http:\/\/false.i2p/outproxy = http:\/\/exit.stormycloud.i2p/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
 echo "ExcludeNodes {kp},{ir},{cu},{cn},{hk},{mo},{ru},{sy},{pk}" > "${lxcTree}/mix/rootfs/etc/tor/torrc"
 echo "StrictNodes 1" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
 echo "ClientUseIPv6 1" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
 echo "IPv6Exit 1" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
-echo "SocksPort 10.0.3.5:9050" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
+echo "SocksPort 10.0.3.4:9050" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
 echo "ControlPort 9051" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
 
 # Configuring "pod"
