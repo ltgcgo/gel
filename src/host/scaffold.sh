@@ -91,6 +91,7 @@ lxc-start -n alpbase
 echo "Waiting for the container network..."
 sleep 4s
 lxc-attach -n alpbase -u 0 -g 0 -v "GEL_SLIM=1" -- sh "/root/gel/install.sh"
+lxc-attach -n alpbase -u 0 -g 0 -- apk add libcap
 lxc-stop -n alpbase
 chmod 755 "${lxcTree}"
 sleep 2s
@@ -135,6 +136,7 @@ echo -e "lxc.cgroup2.memory.max = 384M" >> "${lxcTree}/web/config"
 lxc-start -n "web"
 sleep 4s
 lxc-attach -n "web" -u 0 -- apk add caddy coredns haproxy
+lxc-attach -n "web" -u 0 -- systemctl disable sshd
 lxc-attach -n "web" -u 0 -- systemctl enable caddy
 lxc-attach -n "web" -u 0 -- systemctl enable coredns
 lxc-attach -n "web" -u 0 -- systemctl enable haproxy
@@ -146,9 +148,11 @@ echo -e "lxc.cgroup2.cpu.max = 200000 1000000" >> "${lxcTree}/mix/config"
 lxc-start -n "mix"
 sleep 4s
 lxc-attach -n "mix" -u 0 -- apk add tor nyx i2pd yggdrasil
+lxc-attach -n "mix" -u 0 -- systemctl disable sshd
 lxc-attach -n "mix" -u 0 -- systemctl enable tor
 lxc-attach -n "mix" -u 0 -- systemctl enable i2pd
 lxc-attach -n "mix" -u 0 -- systemctl enable yggdrasil
+lxc-attach -n "mix" -u 0 -- mkdir -p /lib/modules
 lxc-attach -n "mix" -u 0 -- bash -c 'yggdrasil -genconf > /etc/yggdrasil.conf'
 lxc-stop -n "mix"
 sed -i "s/ipv6 = false/ipv6 = true/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
@@ -179,6 +183,7 @@ lxc-stop -n "pod"
 lxc-start -n "net"
 sleep 4s
 lxc-attach -n "net" -u 0 -- apk add wireguard-tools deno
+lxc-attach -n "net" -u 0 -- systemctl disable sshd
 lxc-stop -n "net"
 
 # Finishing touches

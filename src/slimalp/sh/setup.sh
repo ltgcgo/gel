@@ -4,7 +4,7 @@ sed -i "s/__FLAVOUR__/Alpine Slim/g" $PREFIX/etc/motd
 bash install.sh
 bash cleanup.sh
 if [ "$MODE_NATIVE" != "" ]; then
-	apk add libcap-utils
+	apk add libcap-utils shadow-subids
 	setcap cap_setuid+ep /usr/bin/newuidmap
 	setcap cap_setgid+ep /usr/bin/newgidmap
 fi
