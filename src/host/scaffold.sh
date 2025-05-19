@@ -151,8 +151,8 @@ lxc-attach -n "mix" -u 0 -- apk add tor nyx i2pd yggdrasil
 lxc-attach -n "mix" -u 0 -- systemctl disable sshd
 lxc-attach -n "mix" -u 0 -- systemctl enable tor
 lxc-attach -n "mix" -u 0 -- systemctl enable i2pd
+lxc-attach -n "mix" -u 0 -- bash -c 'mkdir -p /lib/modules/$(uname -r)'
 lxc-attach -n "mix" -u 0 -- systemctl enable yggdrasil
-lxc-attach -n "mix" -u 0 -- mkdir -p /lib/modules
 lxc-attach -n "mix" -u 0 -- bash -c 'yggdrasil -genconf > /etc/yggdrasil.conf'
 lxc-stop -n "mix"
 sed -i "s/ipv6 = false/ipv6 = true/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
