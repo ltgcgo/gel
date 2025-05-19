@@ -149,7 +149,7 @@ lxc-attach -n "mix" -u 0 -- apk add tor nyx i2pd yggdrasil
 lxc-attach -n "mix" -u 0 -- systemctl enable tor
 lxc-attach -n "mix" -u 0 -- systemctl enable i2pd
 lxc-attach -n "mix" -u 0 -- systemctl enable yggdrasil
-lxc-attach -n "mix" -u 0 -- bash -c 'yggdrasil -genconf > /etc/yggdrasil/yggdrasil.conf'
+lxc-attach -n "mix" -u 0 -- bash -c 'yggdrasil -genconf > /etc/yggdrasil.conf'
 lxc-stop -n "mix"
 sed -i "s/ipv6 = false/ipv6 = true/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
 sed -i 's/# bandwidth = L/bandwidth = 5120/g' "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
@@ -179,9 +179,6 @@ lxc-stop -n "pod"
 lxc-start -n "net"
 sleep 4s
 lxc-attach -n "net" -u 0 -- apk add wireguard-tools deno
-echo -e '#!/sbin/openrc-run\n\ndescription="WireGuard auto-start helper"\n\ndepend() {\n\tneed localmount\n\tneed net\n}\n\nstart() {\n}\n\nstop() {\n}' > "${lxcTree}/pod/rootfs/etc/init.d/wgstarter"
-lxc-attach -n "net" -u 0 -- bash -c 'chmod +x /etc/init.d/wgstarter'
-lxc-attach -n "net" -u 0 -- systemctl enable wgstarter
 lxc-stop -n "net"
 
 # Finishing touches
