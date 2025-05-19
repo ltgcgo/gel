@@ -189,6 +189,8 @@ lxc-attach -n "pod" -u 0 -- bash -c 'echo -e "#!/sbin/openrc-run\n\ndescription=
 lxc-attach -n "pod" -u 0 -- apk add podman podman-compose
 lxc-attach -n "pod" -u 0 -- chmod +x /etc/init.d/tmp-clean
 lxc-attach -n "pod" -u 0 -- systemctl enable tmp-clean
+lxc-attach -n "pod" -u 0 -- bash -c 'setcap cap_setuid+ep /usr/bin/newuidmap'
+lxc-attach -n "pod" -u 0 -- bash -c 'setcap cap_setgid+ep /usr/bin/newgidmap'
 #lxc-attach -n "pod" -u 1000 -- podman system migrate
 lxc-stop -n "pod"
 
