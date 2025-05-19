@@ -178,7 +178,7 @@ sed -i "s/root:655360:131072/root:655360:1048576/g" "/etc/subgid"
 sed -i "s/ 131072/ 1048576/g" "${lxcTree}/pod/config"
 echo -e "lxc.mount.entry = proc dev/.lxc/proc proc create=dir,optional 0 0" >> "${lxcTree}/pod/config"
 echo -e "lxc.mount.entry = sys dev/.lxc/sys sysfs create=dir,optional 0 0" >> "${lxcTree}/pod/config"
-#echo -e "lxc.include = /usr/share/lxc/config/nesting.conf" >> "${lxcTree}/pod/config"
+echo -e "#lxc.include = /usr/share/lxc/config/nesting.conf" >> "${lxcTree}/pod/config"
 echo -e "lxc.cgroup2.cpu.max = 400000 1000000" >> "${lxcTree}/pod/config"
 echo -e "lxc.prlimit.nofile = 1048576" >> "${lxcTree}/pod/config"
 lxc-start -n "pod"
@@ -186,7 +186,6 @@ sleep 2s
 lxc-attach -n "pod" -u 0 -- bash -c 'echo -e "user:131074:524288" >> "/etc/subuid"'
 lxc-attach -n "pod" -u 0 -- bash -c 'echo -e "user:131074:524288" >> "/etc/subgid"'
 lxc-attach -n "pod" -u 0 -- bash -c 'echo -e "#!/sbin/openrc-run\n\ndescription=\"Garbage disposal\"\n\ncommand=\"/bin/rm\"\ncommand_args=\"-rf /tmp/*\"\ncommand_background=true\npidfile=\"/run/$RC_SVCNAME.pid\"" > "/etc/init.d/tmp-clean"'
-sleep 4s
 lxc-attach -n "pod" -u 0 -- apk add podman podman-compose
 lxc-attach -n "pod" -u 0 -- chmod +x /etc/init.d/tmp-clean
 lxc-attach -n "pod" -u 0 -- systemctl enable tmp-clean
@@ -195,7 +194,7 @@ lxc-stop -n "pod"
 
 # Configuring "net"
 lxc-start -n "net"
-sleep 4s
+sleep 2s
 lxc-attach -n "net" -u 0 -- apk add wireguard-tools deno
 lxc-attach -n "net" -u 0 -- systemctl disable sshd
 lxc-stop -n "net"
