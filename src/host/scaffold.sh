@@ -118,10 +118,10 @@ for name in ${names[@]}; do
 	# Show the container name
 	echo "${name}" > "${lxcRoot}/etc/zsh/.customShellName"
 	# Configure subordinate IDs for unprivileged slices
-	subidConf="$((1048576+1048576*$startOrder))"
-	echo "root:${subidConf}:1048576" >> /etc/subuid
-	echo "root:${subidConf}:1048576" >> /etc/subgid
-	echo -e "lxc.include = /usr/share/lxc/config/userns.conf\nlxc.idmap = u 0 ${subidConf} 1048576\nlxc.idmap = g 0 ${subidConf} 1048576" >> "${lxcConf}"
+	subidConf="$((262144+131072*$startOrder))"
+	echo "root:${subidConf}:131072" >> /etc/subuid
+	echo "root:${subidConf}:131072" >> /etc/subgid
+	echo -e "lxc.include = /usr/share/lxc/config/userns.conf\nlxc.idmap = u 0 ${subidConf} 131072\nlxc.idmap = g 0 ${subidConf} 131072" >> "${lxcConf}"
 	chmod 755 "${lxcPath}"
 	chmod 755 "${lxcRoot}"
 	chmod 640 "${lxcConf}"
@@ -170,6 +170,9 @@ echo "SocksPort 10.0.3.4:9050" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
 echo "ControlPort 9051" >> "${lxcTree}/mix/rootfs/etc/tor/torrc"
 
 # Configuring "pod"
+sed -i "s/root:655360:131072/root:655360:1048576/g" "/etc/subuid"
+sed -i "s/root:655360:131072/root:655360:1048576/g" "/etc/subgid"
+sed -i "s/ 131072/ 1048576/g" "${lxcTree}/pod/config"
 echo -e "lxc.include = /usr/share/lxc/config/nesting.conf" >> "${lxcTree}/pod/config"
 echo -e "lxc.cgroup2.cpu.max = 400000 1000000" >> "${lxcTree}/pod/config"
 echo -e "lxc.prlimit.nofile = 1048576" >> "${lxcTree}/pod/config"
