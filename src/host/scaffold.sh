@@ -93,6 +93,7 @@ sleep 4s
 lxc-attach -n alpbase -u 0 -g 0 -v "GEL_SLIM=1" -- sh "/root/gel/install.sh"
 lxc-stop -n alpbase
 chmod 755 "${lxcTree}"
+sleep 2s
 
 # Create subsequent containers
 for name in ${names[@]}; do
@@ -102,7 +103,7 @@ for name in ${names[@]}; do
 	lxcConf="${lxcPath}/config"
 	lxcRoot="${lxcPath}/rootfs"
 	# Create from base
-	lxc-copy -n alpbase -N "${name}"
+	lxc-copy -n alpbase -N "${name}" -l INFO
 	# Configure autostart
 	echo -e "\nlxc.start.order = $(($startOrder+1))\nlxc.start.auto = 1\nlxc.start.delay = 4" >> "${lxcConf}"
 	# Enable FUSE
@@ -132,6 +133,7 @@ done
 # Configuring "web"
 echo -e "lxc.cgroup2.memory.max = 384M" >> "${lxcTree}/web/config"
 lxc-start -n "web"
+sleep 4s
 lxc-attach -n "web" -u 0 -- apk add caddy coredns haproxy
 lxc-attach -n "web" -u 0 -- systemctl enable caddy
 lxc-attach -n "web" -u 0 -- systemctl enable coredns
@@ -142,6 +144,7 @@ lxc-stop -n "web"
 echo -e "lxc.cgroup2.memory.max = 256M" >> "${lxcTree}/mix/config"
 echo -e "lxc.cgroup2.cpu.max = 200000 1000000" >> "${lxcTree}/mix/config"
 lxc-start -n "mix"
+sleep 4s
 lxc-attach -n "mix" -u 0 -- apk add tor nyx i2pd yggdrasil
 lxc-attach -n "mix" -u 0 -- systemctl enable tor
 lxc-attach -n "mix" -u 0 -- systemctl enable i2pd
@@ -167,12 +170,14 @@ echo -e "lxc.prlimit.nofile = 1048576" >> "${lxcTree}/pod/config"
 echo -e "user:131074:524288" >> "${lxcTree}/pod/rootfs/etc/subuid"
 echo -e "user:131074:524288" >> "${lxcTree}/pod/rootfs/etc/subgid"
 lxc-start -n "pod"
+sleep 4s
 lxc-attach -n "pod" -u 0 -- apk add podman podman-compose
 #lxc-attach -n "pod" -u 1000 -- podman system migrate
 lxc-stop -n "pod"
 
 # Configuring "net"
 lxc-start -n "net"
+sleep 4s
 lxc-attach -n "net" -u 0 -- apk add wireguard-tools deno
 echo -e '#!/sbin/openrc-run\n\ndescription="WireGuard auto-start helper"\n\ndepend() {\n\tneed localmount\n\tneed net\n}\n\nstart() {\n}\n\nstop() {\n}' > "${lxcTree}/pod/rootfs/etc/init.d/wgstarter"
 lxc-attach -n "net" -u 0 -- bash -c 'chmod +x /etc/init.d/wgstarter'
