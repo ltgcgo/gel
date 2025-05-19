@@ -175,9 +175,12 @@ echo -e "lxc.cgroup2.cpu.max = 400000 1000000" >> "${lxcTree}/pod/config"
 echo -e "lxc.prlimit.nofile = 1048576" >> "${lxcTree}/pod/config"
 echo -e "user:131074:524288" >> "${lxcTree}/pod/rootfs/etc/subuid"
 echo -e "user:131074:524288" >> "${lxcTree}/pod/rootfs/etc/subgid"
+echo -e '#!/sbin/openrc-run\n\ndescription="Garbage disposal"\n\ncommand="/bin/rm"\ncommand_args="-rf /tmp/*"\ncommand_background=true\npidfile="/run/$RC_SVCNAME.pid"' > "${lxcTree}/pod/rootfs/etc/init.d/tmp-clean"
 lxc-start -n "pod"
 sleep 4s
 lxc-attach -n "pod" -u 0 -- apk add podman podman-compose
+lxc-attach -n "pod" -u 0 -- chmod +x /etc/init.d/tmp-clean
+lxc-attach -n "pod" -u 0 -- systemctl enable tmp-clean
 #lxc-attach -n "pod" -u 1000 -- podman system migrate
 lxc-stop -n "pod"
 
