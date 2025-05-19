@@ -130,14 +130,23 @@ for name in ${names[@]}; do
 done
 
 # Configuring "web"
+echo -e "lxc.cgroup2.memory.max = 384M" >> "${lxcTree}/web/config"
+lxc-start -n "web"
+lxc-attach -n "web" -u 0 -- apk add caddy coredns haproxy
+lxc-attach -n "web" -u 0 -- systemctl enable caddy
+lxc-attach -n "web" -u 0 -- systemctl enable coredns
+lxc-attach -n "web" -u 0 -- systemctl enable haproxy
+lxc-stop -n "web"
 
 # Configuring "mix"
 echo -e "lxc.cgroup2.memory.max = 256M" >> "${lxcTree}/mix/config"
 echo -e "lxc.cgroup2.cpu.max = 200000 1000000" >> "${lxcTree}/mix/config"
 lxc-start -n "mix"
-lxc-attach -n "mix" -u 0 -- apk add tor nyx i2pd
+lxc-attach -n "mix" -u 0 -- apk add tor nyx i2pd yggdrasil
 lxc-attach -n "mix" -u 0 -- systemctl enable tor
 lxc-attach -n "mix" -u 0 -- systemctl enable i2pd
+lxc-attach -n "mix" -u 0 -- systemctl enable yggdrasil
+lxc-attach -n "mix" -u 0 -- bash -c 'yggdrasil -genconf > /etc/yggdrasil/yggdrasil.conf'
 lxc-stop -n "mix"
 sed -i "s/ipv6 = false/ipv6 = true/g" "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
 sed -i 's/# bandwidth = L/bandwidth = 5120/g' "${lxcTree}/mix/rootfs/etc/i2pd/i2pd.conf"
@@ -163,6 +172,12 @@ lxc-attach -n "pod" -u 0 -- apk add podman podman-compose
 lxc-stop -n "pod"
 
 # Configuring "net"
+lxc-start -n "net"
+lxc-attach -n "net" -u 0 -- apk add wireguard-tools deno
+echo -e '#!/sbin/openrc-run\n\ndescription="WireGuard auto-start helper"\n\ndepend() {\n\tneed localmount\n\tneed net\n}\n\nstart() {\n}\n\nstop() {\n}' > "${lxcTree}/pod/rootfs/etc/init.d/wgstarter"
+lxc-attach -n "net" -u 0 -- bash -c 'chmod +x /etc/init.d/wgstarter'
+lxc-attach -n "net" -u 0 -- systemctl enable wgstarter
+lxc-stop -n "net"
 
 # Finishing touches
 startOrder=0
