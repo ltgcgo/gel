@@ -124,8 +124,8 @@ for name in ${names[@]}; do
 	fi
 	echo "root:${subidConf}:131072" >> /etc/subuid
 	echo "root:${subidConf}:131072" >> /etc/subgid
-	echo -e "lxc.include = /usr/share/lxc/config/userns.conf\nlxc.idmap = u 0 ${subidConf} 131072\nlxc.idmap = g 0 ${subidConf} 131072" >> "${lxcConf}"
 	echo -e "lxc.include = /usr/share/lxc/config/nesting.conf" >> "${lxcConf}"
+	echo -e "lxc.include = /usr/share/lxc/config/userns.conf\nlxc.idmap = u 0 ${subidConf} 131072\nlxc.idmap = g 0 ${subidConf} 131072" >> "${lxcConf}"
 	chmod 755 "${lxcPath}"
 	chmod 755 "${lxcRoot}"
 	chmod 640 "${lxcConf}"
@@ -151,13 +151,13 @@ echo -e "lxc.cgroup2.memory.max = 256M" >> "${lxcTree}/mix/config"
 echo -e "lxc.cgroup2.cpu.max = 200000 1000000" >> "${lxcTree}/mix/config"
 lxc-start -n "mix"
 sleep 4s
+lxc-attach -n "mix" -u 0 -- bash -c 'mkdir -p /lib/modules/$(uname -r)'
 lxc-attach -n "mix" -u 0 -- apk add tor nyx i2pd yggdrasil
 lxc-attach -n "mix" -u 0 -- systemctl disable sshd
 lxc-attach -n "mix" -u 0 -- 'chown -R tor:nobody /var/lib/tor'
 lxc-attach -n "mix" -u 0 -- systemctl enable tor
 lxc-attach -n "mix" -u 0 -- 'chown -R i2pd:i2pd /var/lib/i2pd'
 lxc-attach -n "mix" -u 0 -- systemctl enable i2pd
-lxc-attach -n "mix" -u 0 -- bash -c 'mkdir -p /lib/modules/$(uname -r)'
 lxc-attach -n "mix" -u 0 -- systemctl enable yggdrasil
 lxc-attach -n "mix" -u 0 -- bash -c 'yggdrasil -genconf > /etc/yggdrasil.conf'
 lxc-attach -n "mix" -u 0 -- bash -c 'sed -i "s/ipv6 = false/ipv6 = true/g" "/etc/i2pd/i2pd.conf"'
